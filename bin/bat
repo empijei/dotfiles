@@ -1,0 +1,2 @@
+#!/bin/bash
+upower -d | grep perc | grep -oE "[0-9]*" | head -1

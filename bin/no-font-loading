@@ -1,0 +1,7 @@
+#!/bin/bash
+PATH=$(echo $PATH | sed "s#$(dirname $0):##g")
+mv $HOME/.config/fontconfig/fonts.conf{,.bak}
+$(basename $0) &
+disown
+sleep 1
+mv $HOME/.config/fontconfig/fonts.conf{.bak,}

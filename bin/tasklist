@@ -1,0 +1,19 @@
+#!/bin/bash
+awepopup(){
+			echo "
+			local naughty = require('naughty')
+			naughty.notify({
+			title = '$1',
+			text = '$2',
+			timeout=6})"|
+			awesome-client
+}
+case $1 in 
+	CPU)
+		awepopup "CPU%" "`ps -Ao pcpu,comm,pid --sort=-pcpu --no-headers | head -n 6 | tr '\n' '|' | sed 's/|/<br>/g'`"
+		;;
+	MEM)
+		awepopup "MEM%" "`ps -Ao pmem,comm,pid --sort=-rss --no-headers | head -n 6 | tr '\n' '|' | sed 's/|/<br>/g'`"
+		;;
+	*) echo "Usage: CPU MEM"
+esac

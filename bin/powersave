@@ -1,0 +1,42 @@
+#!/bin/bash
+mkdir -p /tmp/empijei
+awemsg(){
+		echo "aweclientwidget:set_text('$@')" | 
+		awesome-client
+}
+awepopup(){
+			echo "
+			local naughty = require('naughty')
+			naughty.notify({
+			preset = naughty.config.presets.critical,
+			title = 'Powersave',
+			text = '$@',
+			timeout=4})"|
+			awesome-client
+}
+case $1 in 
+	ON)
+		awemsg 'Setting powersave mode...'
+		xbacklight > /tmp/empijei/oldbacklight
+		xbacklight -set 9
+
+		#Check for wifi
+		rfkill list | 
+		tr '\n' ' ' | 
+		grep -oP "Wireless[^:]*: \K[^ ]+" |
+		grep no >/dev/null && 
+		awepopup "Wi-Fi is still on!"
+
+
+		;;
+	OFF)
+		awemsg 'Setting performance mode...'
+		if [ -e /tmp/empijei/oldbacklight ]
+		then
+			xbacklight -set $(cat /tmp/empijei/oldbacklight)
+		fi
+		;;
+	*) echo "Usage: ON or OFF"
+esac
+
+awemsg ""

@@ -1,0 +1,9 @@
+#!/bin/env bash
+DATE="`date +%Y-%m-%d_%H.%M.%S`"
+NAME="${DATE}_screenshot.png"
+SCREENSHOTPATH="$HOME/Screenshots/"
+FULLPATH="${SCREENSHOTPATH}${NAME}"
+import -window root -quality 100 "${FULLPATH}"
+
+TYPE=`file -b --mime-type  "${FULLPATH}"`
+xclip -selection clipboard -t "$TYPE" <  "${FULLPATH}"

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+pacmd list-sinks | 
+grep -Po ".*index: \K.+" | 
+while read line
+do
+pactl set-sink-volume $line +7%
+done

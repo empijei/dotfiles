@@ -1,0 +1,2 @@
+#!/bin/bash
+$HOME/bin/preloader /usr/bin/"`basename $0`" $@

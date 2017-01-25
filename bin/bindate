@@ -1,0 +1,4 @@
+#!/bin/bash
+echo $(printf '%05d' $(bc<<<"obase=2; `date +%H` % 12")):$( printf '%06d' $(bc<<<"obase=2; `date +%M`")) #| bc && echo ":" && echo "obase=2; `date +%M`" | bc ; } | sed ':begin;$!N;s/\n//;tbegin'
+
+

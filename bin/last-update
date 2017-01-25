@@ -1,0 +1,4 @@
+#!/bin/bash
+tac /var/log/pacman.log| 
+grep -m 1 -- "'pacman -Syu'" | 
+grep -oP '^\[\K[^\]]+'

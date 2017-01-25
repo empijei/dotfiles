@@ -1,0 +1,7 @@
+#!/bin/zsh
+while :
+do
+	OUT="`upower -d`"
+	echo `echo $OUT | grep time | grep -oE "[0-9]*\.[0-9]*.+" | head -1` , `echo $OUT | grep perc | grep -oE "[0-9]*" | head -1` > .perc
+	sleep 30
+done

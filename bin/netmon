@@ -1,0 +1,33 @@
+#!/bin/bash
+mkdir -p /tmp/empijei
+OLDRXVALUE="oldrxvalue"
+OLDTXVALUE="oldtxvalue"
+TMPFLD="/tmp/empijei/"
+NETFLD="/sys/class/net/"
+CURTIME="$(date +%s)"
+ELAPSED="$(($CURTIME - $(cat $TMPFLD/lastupdate)))"
+echo $ELAPSED
+RX=0
+TX=0
+#TODO chech if ifaces have changed
+for iface in `ls /sys/class/net`
+do
+	RX=$(($RX + $(cat "$NETFLD$iface/statistics/rx_bytes")))
+	TX=$(($TX + $(cat "$NETFLD$iface/statistics/tx_bytes")))
+done
+
+if [ -e "$TMPFLD$OLDRXVALUE" ] 
+then
+	echo rx: $((($RX - $(cat "$TMPFLD$OLDRXVALUE"))/$ELAPSED)) Bps
+fi
+if [ -e "$TMPFLD$OLDTXVALUE" ] 
+then
+	echo tx: $((($TX - $(cat "$TMPFLD$OLDTXVALUE"))/$ELAPSED)) Bps
+fi
+
+
+#Prepare stats for next loop
+ls /sys/class/net > /tmp/empijei/ifaces
+echo -n $RX > /tmp/empijei/oldrxvalue
+echo -n $TX > /tmp/empijei/oldtxvalue
+echo -n $CURTIME > /tmp/empijei/lastupdate
