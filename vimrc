@@ -81,6 +81,10 @@ autocmd FileType tex set spell spelllang=it_it
 autocmd FileType tex set colorcolumn=0
 let g:tex_flavor = "latex"
 
+"Yes, I indent HTML
+autocmd FileType html set tabstop=1
+autocmd FileType html set nolist
+
 "Remapping for tabs {{{
 nnoremap th  :tabfirst<CR>
 nnoremap tj  :tabnext<CR>
@@ -267,6 +271,7 @@ iabbrev android Android
 iabbrev andoird Android
 nnoremap W :w<cr>
 nnoremap X :x<cr>
+nnoremap & #
 command! W :w
 command! Q :q
 command! WQ :wq
@@ -332,7 +337,7 @@ nmap gZ <Plug>ZVKeyDocset
 "endif
 
 "vim-livedown
-let g:livedown_autorun = 1
+let g:livedown_autorun = 0
 let g:livedown_open = 1
 let g:livedown_port = 1337
 let g:livedown_browser = "chromium"
@@ -406,6 +411,8 @@ augroup omnisharp_commands
 
 augroup END
 
+autocmd FileType cs nnoremap gd <C-]>
+
 autocmd FileType markdown set colorcolumn=
 autocmd FileType tex inoremap <c-a> <Esc>[sz=i1<CR><CR>A
 autocmd FileType markdown inoremap <c-a> <Esc>[sz=i1<CR><CR>A
@@ -413,3 +420,4 @@ autocmd BufRead,BufNewFile *.nmap set filetype=nmap
 
 autocmd FileType c,cpp,objc,objcpp,javascript,python nnoremap gd :YcmCompleter GoTo<CR>
 autocmd FileType python,typescript,javascript nnoremap gr :YcmCompleter GoToReferences<CR>
+

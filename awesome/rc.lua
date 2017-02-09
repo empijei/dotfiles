@@ -12,6 +12,9 @@ local menubar = require("menubar")
 local vicious = require("vicious")
 local contrib = require("vicious.contrib")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+--Build this with 
+--xdg_menu --format awesome --root-menu /etc/xdg/menus/arch-applications.menu >~/.config/awesome/archmenu.lua
+local xdg_menu = require("archmenu")
 
 --awesome.font          = "OpenDyslexicMono 10"
 -- {{{ Error handling
@@ -107,6 +110,7 @@ end
 --{ "open terminal", terminal }
 --}
 --})
+mymainmenu = awful.menu({ items = {{ "awesome", myawesomemenu, beautiful.awesome_icon },{ "Applications", xdgmenu },{ "open terminal", terminal }}})
 
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
 menu = mymainmenu })
@@ -220,6 +224,7 @@ local rainbow = {
 
 		batwid = vicious.widgets.bat
 		powersave = batwid("","BAT0")[1] == "−" 
+		--powersave = false
 		alerted = false
 		local function mypower()
 			batvalues=batwid("","BAT0")
@@ -374,7 +379,7 @@ local rainbow = {
 		--return ""
 		--end
 		foowidget = wibox.widget.textbox()
-		foowidget:set_markup_silently(powersave and '<span color="#008000">🍂</span>' or '<span color="#FF0000">🔥</span>')
+		foowidget:set_markup_silently(powersave and '<span color="#008000">🍂</span>' or '<span color="#FF5000">🔥</span>')
 		--vicious.register(foowidget, foo, "$1",1)
 
 
@@ -448,7 +453,7 @@ local rainbow = {
 			set_wallpaper(s)
 
 			-- Each screen has its own tag table.
-			awful.tag({ "1 ", "2 ", "3 ", "4 ", "5 ", "6 ", "7 ", "8 ", "9 " }, s, awful.layout.layouts[1])
+			awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
 
 			-- Create a promptbox for each screen
 			--s.mypromptbox = awful.widget.prompt()
@@ -509,6 +514,19 @@ awful.button({ }, 5, awful.tag.viewprev)
 ))
 -- }}}
 
+--{{{ Author: JP
+local function movetonexttag(delta)
+	if client.focus then
+		local tags = client.focus.screen.tags
+		local tag = tags[(client.focus.first_tag.index + delta - 1) % #tags + 1]
+		if tag then
+			client.focus:move_to_tag(tag)
+			tag:view_only()
+		end
+	end
+end
+--}}}
+
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
 awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
@@ -534,6 +552,8 @@ end,
 ),
 
 -- layout manipulation
+
+
 awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end, {description = "swap with next client by index", group = "client"}),
 awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end, {description = "swap with previous client by index", group = "client"}),
 
@@ -552,9 +572,15 @@ awful.key({ modkey,  "Shift"}, "a",      function()
 end,
 {description = "Move to screen on the left", group = "client"}),
 
+awful.key({ modkey, "Control" }, "Right", function() movetonexttag(1) end,
+{description = "move and switch to tag on the right", group = "client"}),
+awful.key({ modkey, "Control" }, "Left", function() movetonexttag(-1) end,
+{description = "move and switch to tag on the left", group = "client"}),
+
 awful.key({ modkey,           }, "u", awful.client.urgent.jumpto, {description = "jump to urgent client", group = "client"}),
 awful.key({         modkey}, "Print", function () awful.spawn("screenshot",false)  end,{description = "takes a screenshot", group = "screen"}),
-awful.key({         "Mod1"    }, "Print", function () awful.spawn("crop-screenshot",false)  end,{description = "takes a screenshot with selection", group = "screen"}),
+awful.key({         "Mod1"    }, "Print", function () awful.spawn("crop-screenshot SAVE",false)  end,{description = "takes a screenshot with selection", group = "screen"}),
+awful.key({"Mod1", "Shift" }, "Print", function () awful.spawn("crop-screenshot",false)  end,{description = "takes a screenshot with selection", group = "screen"}),
 awful.key({ modkey,           }, "Tab",
 function ()
 	--awful.client.focus.history.previous()
@@ -568,7 +594,7 @@ end,
 -- Standard program
 awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end, {description = "open a terminal", group = "launcher"}),
 awful.key({ modkey, "Control" }, "r", awesome.restart, {description = "reload awesome", group = "awesome"}),
-awful.key({ modkey, "Shift"   }, "q", awesome.quit, {description = "quit awesome", group = "awesome"}),
+--awful.key({ modkey, "Shift"   }, "q", awesome.quit, {description = "quit awesome", group = "awesome"}),
 
 awful.key({ modkey,    }, "F1", function () awful.spawn("chromium ") end,{description = "Chromium", group = "system"}),
 awful.key({ modkey,"Shift"}, "F1", function () awful.spawn("chromium --incognito") end,{description = "Incognito Chromium", group = "system"}),
@@ -580,9 +606,20 @@ awful.key({ modkey,    }, "F5", function () awful.spawn("xbacklight -5",false) e
 awful.key({ modkey,    }, "F6", function () awful.spawn("xbacklight +5",false) end,{description = "Increase screen backlight", group = "system"}),
 awful.key({     }, "XF86MonBrightnessDown", function () awful.spawn("xbacklight -5",false) end,{description = "Decrease screen backlight", group = "system"}),
 awful.key({     }, "XF86MonBrightnessUp", function () awful.spawn("xbacklight +5",false) end,{description = "Increase screen backlight", group = "system"}),
-awful.key({     }, "XF86AudioLowerVolume", function () awful.spawn("volumedown",false) end,{description = "Decrease volume", group = "system"}),
+
+awful.key({     }, "XF86AudioLowerVolume", 
+function () awful.spawn("volumedown",false) end,
+{description = "Decrease volume", group = "system"}),
+
 awful.key({     }, "XF86AudioRaiseVolume", function () awful.spawn("volumeup",false) end,{description = "Increase volume", group = "system"}),
 awful.key({     }, "XF86AudioMute", function () awful.spawn("volumetoggle",false) end,{description = "Mute volume", group = "system"}),
+
+--TODO
+awful.key({ modkey,           }, "x",     function () awful.spawn("echo -n '<img src=a onerror=alert(document.domain)>' | xclip -selection c",true) end,{description = "Put sample XSS payload in clipboard", group = "system"}),
+
+awful.key({ modkey,           }, ".",     
+function () awful.spawn("xscreensaver-command -lock",false) end,
+{description = "Locks the screen", group = "system"}),
 
 awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,
 {description = "increase master width factor", group = "layout"}),
@@ -601,10 +638,10 @@ awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)      
 awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
 {description = "select previous", group = "layout"}),
 
-awful.key({ modkey,  "Shift"  }, "t",      function (c) awesome.spawn("tasklist CPU")           end,
+awful.key({ modkey,  "Shift"  }, "c",      function () awesome.spawn("tasklist CPU")           end,
 {description = "Shows the top 5 CPU consuming processes", group = "system"}),
 
-awful.key({ modkey,  "Shift"  }, "m",      function (c) awesome.spawn("tasklist MEM")           end,
+awful.key({ modkey,  "Shift"  }, "m",      function () awesome.spawn("tasklist MEM")           end,
 {description = "Shows the top 5 MEMORY consuming processes", group = "system"}),
 
 awful.key({ modkey, "Shift" }, "n",
@@ -669,7 +706,6 @@ end,
 awful.key({ modkey,}, "q",      function (c) c:kill()                         end,
 {description = "close", group = "client"}),
 
-awful.key({ modkey,           }, ".",     function () awful.spawn("xscreensaver-command -lock",false) end,{description = "Locks the screen", group = "system"}),
 
 awful.key({ modkey, }, "f",  function(c)c.floating = not c.floating end,
 {description = "toggle floating", group = "client"}),
@@ -787,6 +823,7 @@ awful.rules.rules = {
 		"xtightvncviewer"},
 
 		name = {
+			" ", --burp filter
 			"Event Tester",  -- xev.
 		},
 		role = {
