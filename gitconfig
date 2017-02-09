@@ -1,0 +1,25 @@
+[user]
+	name = RobClap
+	email = robclap8@gmail.com
+[credential]
+	helper = cache --timeout=3600
+[core]
+	editor = vim
+	excludesfile = /home/rob/.gitignore
+[diff]
+	tool = vimdiff
+[merge]
+	tool = vimdiff
+[difftool]
+	prompt = false
+[alias]
+	d = difftool
+	co = checkout
+	cm = commit
+	s = status
+	hist = log --graph --all --tags --decorate
+	b = branch
+	pus = push
+	puhs = push
+[push]
+	default = simple

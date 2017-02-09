@@ -823,7 +823,6 @@ awful.rules.rules = {
 		"xtightvncviewer"},
 
 		name = {
-			" ", --burp filter
 			"Event Tester",  -- xev.
 		},
 		role = {
