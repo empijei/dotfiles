@@ -33,15 +33,6 @@ nnoremap H :r ! figlet
 nnoremap <c-f> gg=G``
 inoremap <c-f> <Esc>gg=G``i
 
-"Surround word with " ' _ * -
-nnoremap <leader>" bi"<esc>ea"
-nnoremap <leader>' bi'<esc>ea'
-nnoremap <leader>_ bi_<esc>ea_
-nnoremap <leader>* bi*<esc>ea*
-nnoremap <leader>- bi__<esc>ea__
-autocmd FileType markdown inoremap <C-b> __
-autocmd FileType markdown inoremap <C-i> _
-
 "esc key is a serious overstretch
 inoremap jk <esc>
 
@@ -76,15 +67,6 @@ set omnifunc=syntaxcomplete#Complete "http://vim.wikia.com/wiki/Omni_completion
 "Set the mark at 80th character to be blue instead of eyekilling red
 "}}}
 
-"Spellcheck for latex
-autocmd FileType tex set spell spelllang=it_it
-autocmd FileType tex set colorcolumn=0
-let g:tex_flavor = "latex"
-
-"Yes, I indent HTML
-autocmd FileType html set tabstop=1
-autocmd FileType html set nolist
-
 "Remapping for tabs {{{
 nnoremap th  :tabfirst<CR>
 nnoremap tj  :tabnext<CR>
@@ -97,11 +79,6 @@ nnoremap td  :tabclose<CR>
 nnoremap ta  :tab all<CR>
 "}}}
 
-"TODO
-"autocmd FileType javascript nnoremap <buffer> <leader>c I//<esc>
-"autocmd FileType python     nnoremap <buffer> <leader>c I#<esc>
-"autocmd FileType python     :iabbrev <buffer> iff if:<left>
-"autocmd FileType javascript :iabbrev <buffer> iff if ()<left>
 "statusline {{{
 set laststatus=2 
 set ttimeoutlen=50
@@ -148,7 +125,7 @@ set statusline=%<\ %n:%f\ %m%r%y%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
 "}}}
 
 "Syntax highlight correction for nmap script engine
-autocmd BufRead,BufNewFile *.nse set filetype=lua
+"autocmd BufRead,BufNewFile *.nse set filetype=lua
 
 "Functions to insert time of the day {{{
 nnoremap <F7> "=strftime("%c")<CR>P
@@ -156,8 +133,6 @@ inoremap <F7> <C-R>=strftime("%c")<CR>
 nnoremap <F6> "=strftime("%d/%m/%Y")<CR>P
 inoremap <F6> <C-R>"=strftime("%d/%m/%Y")<CR>
 "}}}
-
-autocmd FileType java nnoremap gd <C-]>
 
 "Ctrl-s to save {{{
 "WARNING: you have to put 
@@ -210,10 +185,10 @@ function! ToggleWrap()
 endfunction
 
 "Break bad habits
-noremap <Up> <NOP>
-noremap <Down> <NOP>
-noremap <Left> <NOP>
-noremap <Right> <NOP>
+"noremap <Up> <NOP>
+"noremap <Down> <NOP>
+"noremap <Left> <NOP>
+"noremap <Right> <NOP>
 
 "Move on buffer in wrapping mode{{{
 "noremap <silent> <Leader>w :call ToggleWrap()<CR>
@@ -285,26 +260,30 @@ iabbrev ssig -- <cr> Roberto (empijei) Clapis<cr>robclap8@gmail.com
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'fatih/vim-go'
-Plugin 'scrooloose/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'shime/vim-livedown'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'ervandew/supertab'
-Plugin 'maksimr/vim-jsbeautify'
-Plugin 'KabbAmine/zeavim.vim'
-Plugin 'godlygeek/tabular'
+Plugin 'VundleVim/Vundle.vim' "Plugin manager
+Plugin 'scrooloose/nerdtree' "File browser left panel
+Plugin 'Xuyuanp/nerdtree-git-plugin' "Addon for nerdtree to support git tags
+Plugin 'Valloric/YouCompleteMe' "Completer for most langauges
+Plugin 'ervandew/supertab' "Tab completion
+Plugin 'KabbAmine/zeavim.vim' "Integration with Zeal
+Plugin 'tpope/vim-dispatch' "Spawn processes in background
+Plugin 'majutsushi/tagbar' "Ctags panel integration
+Plugin 'scrooloose/nerdcommenter' "Commenter for most langauges
+
+"various langauges syntax highlight, completion, advanced browing
+"MarkDown
 Plugin 'plasticboy/vim-markdown'
-Plugin 'OmniSharp/omnisharp-vim'
-Plugin 'tpope/vim-dispatch'
-Plugin 'majutsushi/tagbar'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'keith/swift.vim'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'vim-scripts/Nmap-syntax-highlight'
-Plugin 'kchmck/vim-coffee-script'
+Plugin 'shime/vim-livedown'
+Plugin 'godlygeek/tabular'
+
+Plugin 'fatih/vim-go' "Golang
+Plugin 'keith/swift.vim' "Swift
+Plugin 'davidhalter/jedi-vim' "Python
+Plugin 'vim-scripts/Nmap-syntax-highlight' "Nse
+Plugin 'kchmck/vim-coffee-script' "Coffee Script
+Plugin 'leafgarland/typescript-vim' "TypeScript
+Plugin 'OmniSharp/omnisharp-vim' "Csharp
+Plugin 'maksimr/vim-jsbeautify' "JS Beautifier
 call vundle#end()
 filetype plugin indent on
 
@@ -314,7 +293,6 @@ nnoremap T :TagbarToggle<CR>
 "vim-markdown
 let g:vim_markdown_toc_autofit = 1
 let g:vim_markdown_folding_disabled = 1
-autocmd FileType markdown nnoremap T :Toc<CR>
 
 "NerdTree
 map <C-n> :NERDTreeToggle<CR>
@@ -351,7 +329,9 @@ let g:go_highlight_functions = 1
 let g:go_highlight_interfaces = 1
 let g:go_fmt_command = "goimports"
 let g:go_highlight_build_constraints = 1
+"}}}
 
+" FileType stuff {{{
 augroup golang
 	autocmd!
 	"Show a list of interfaces which is implemented by the type under your cursor with \s
@@ -365,59 +345,70 @@ augroup golang
 	autocmd FileType go nmap <leader>t :GoCoverageToggle<CR>
 	autocmd FileType go nmap <leader>a :GoAlternate<CR>
 	autocmd FileType go nmap # <Plug>(go-def)
-	"Yes, i am this level of lazy
-	"FIXME	autocmd FileType go :iabbrev <buffer> { {<CR><CR>}<Up>
 augroup END
-"}}}
-""Syntastic
-"	let g:syntastic_go_checkers = ['']
-"	let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-"	set statusline+=%#warningmsg#
-"	set statusline+=%{SyntasticStatuslineFlag()}
-"	set statusline+=%*
-"	let g:syntastic_always_populate_loc_list = 1
-"	let g:syntastic_auto_loc_list = 1
-"	let g:syntastic_check_on_open = 1
-"	let g:syntastic_check_on_wq = 0
-"	nnoremap :S :SyntasticToggleMode
 
 let g:OmniSharp_timeout = 1
 " this setting controls how long to wait (in ms) before fetching type / symbol information.
 set updatetime=500
 " Remove 'Press Enter to continue' message when type information is longer than one line.
 augroup omnisharp_commands
-    autocmd!
+	autocmd!
 
-    "Set autocomplete function to OmniSharp (if not using YouCompleteMe completion plugin)
-    autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
+	"Set autocomplete function to OmniSharp (if not using YouCompleteMe completion plugin)
+	autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 
-    "show type information automatically when the cursor stops moving
-    autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
+	"show type information automatically when the cursor stops moving
+	autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
 
-    "The following commands are contextual, based on the current cursor position.
-    autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
-    autocmd FileType cs nnoremap fi :OmniSharpFindImplementations<cr>
-    autocmd FileType cs nnoremap ft :OmniSharpFindType<cr>
-    autocmd FileType cs nnoremap fs :OmniSharpFindSymbol<cr>
-    autocmd FileType cs nnoremap gr :OmniSharpFindUsages<cr>
-    "finds members in the current buffer
-    autocmd FileType cs nnoremap fm :OmniSharpFindMembers<cr>
-    autocmd FileType cs nnoremap tt :OmniSharpTypeLookup<cr>
-    autocmd FileType cs nnoremap K :OmniSharpDocumentation<cr>
-    "navigate up by method/property/field
-    autocmd FileType cs nnoremap <C-K> :OmniSharpNavigateUp<cr>
-    "navigate down by method/property/field
-    autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
+	"The following commands are contextual, based on the current cursor position.
+	autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
+	autocmd FileType cs nnoremap fi :OmniSharpFindImplementations<cr>
+	autocmd FileType cs nnoremap ft :OmniSharpFindType<cr>
+	autocmd FileType cs nnoremap fs :OmniSharpFindSymbol<cr>
+	autocmd FileType cs nnoremap gr :OmniSharpFindUsages<cr>
+	"finds members in the current buffer
+	autocmd FileType cs nnoremap fm :OmniSharpFindMembers<cr>
+	autocmd FileType cs nnoremap tt :OmniSharpTypeLookup<cr>
+	autocmd FileType cs nnoremap K :OmniSharpDocumentation<cr>
+	"navigate up by method/property/field
+	autocmd FileType cs nnoremap <C-K> :OmniSharpNavigateUp<cr>
+	"navigate down by method/property/field
+	autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
 
 augroup END
 
+"This is when omnisharp fails
 autocmd FileType cs nnoremap gd <C-]>
 
-autocmd FileType markdown set colorcolumn=
+augroup markdown_stuff
+	autocmd!
+	autocmd FileType markdown noremap <leader>" bi"<esc>ea"
+	autocmd FileType markdown noremap <leader>' bi'<esc>ea'
+	autocmd FileType markdown noremap <leader>_ bi_<esc>ea_
+	autocmd FileType markdown noremap <leader>* bi*<esc>ea*
+	autocmd FileType markdown noremap <leader>- bi__<esc>ea__
+	autocmd FileType markdown inoremap <C-b> __
+	autocmd FileType markdown inoremap <C-i> _
+	autocmd FileType markdown set colorcolumn=
+	autocmd FileType markdown inoremap <c-a> <Esc>[sz=i1<CR><CR>A
+	autocmd FileType markdown nnoremap T :Toc<CR>
+augroup END
+
+"Spellcheck for latex
+autocmd FileType tex set spell spelllang=it_it
+autocmd FileType tex set colorcolumn=0
 autocmd FileType tex inoremap <c-a> <Esc>[sz=i1<CR><CR>A
-autocmd FileType markdown inoremap <c-a> <Esc>[sz=i1<CR><CR>A
 autocmd BufRead,BufNewFile *.nmap set filetype=nmap
+let g:tex_flavor = "latex"
+
+"Yes, I indent HTML
+autocmd FileType html set tabstop=1
+autocmd FileType html set nolist
+
+autocmd FileType java nnoremap gd <C-]>
 
 autocmd FileType c,cpp,objc,objcpp,javascript,python nnoremap gd :YcmCompleter GoTo<CR>
 autocmd FileType python,typescript,javascript nnoremap gr :YcmCompleter GoToReferences<CR>
 
+autocmd BufRead,BufNewFile *.ts set filetype=typescript
+"}}}
