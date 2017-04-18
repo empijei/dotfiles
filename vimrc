@@ -26,12 +26,16 @@ command! Reconf source $HOME/.vimrc
 "delete empty lines
 command! Strip g/^\s*$/d
 
+"Toggle between vimdiff and vim
+command! Diff windo diffthis | syntax off
+command! NoDiff diffoff! | syntax on
+
 "for extra impact
 nnoremap H :r ! figlet 
 
 "reformat document
-nnoremap <c-f> gg=G``
-inoremap <c-f> <Esc>gg=G``i
+nnoremap <c-f> g=G``
+inoremap <c-f> <Esc>g=G``i
 
 "esc key is a serious overstretch
 inoremap jk <esc>
@@ -229,6 +233,15 @@ endfunction
 "call Wrap()
 "}}}
 
+
+"Xml beautifier
+autocmd FileType xml,html,htm inoremap <c-f> <Esc>:silent %!xmllint --format --recover - <CR>i
+autocmd FileType xml,html,htm nnoremap <c-f> :silent %!xmllint --format --recover - <CR>
+
+"JSON formatter
+autocmd FileType json inoremap <c-f> <Esc>:silent %! jq -M -r .<CR>i
+autocmd FileType json nnoremap <c-f> :silent %! jq -M -r .<CR>
+
 "Common typos fixes for impaired people like me{{{
 iabbrev epr per
 iabbrev melgio meglio
@@ -296,6 +309,10 @@ let g:vim_markdown_folding_disabled = 1
 
 "NerdTree
 map <C-n> :NERDTreeToggle<CR>
+
+"JsBeautify
+autocmd FileType javascript inoremap <c-f> <Esc>:call JsBeautify()<CR>i
+autocmd FileType javascript nnoremap <c-f> :call JsBeautify()<CR>
 
 "SuperTab
 let g:SuperTabDefaultCompletionType = "<c-n>"
@@ -405,9 +422,9 @@ let g:tex_flavor = "latex"
 autocmd FileType html set tabstop=1
 autocmd FileType html set nolist
 
-autocmd FileType java nnoremap gd <C-]>
+autocmd FileType java,c nnoremap gd <C-]>
 
-autocmd FileType c,cpp,objc,objcpp,javascript,python nnoremap gd :YcmCompleter GoTo<CR>
+autocmd FileType cpp,objc,objcpp,javascript,python nnoremap gd :YcmCompleter GoTo<CR>
 autocmd FileType python,typescript,javascript nnoremap gr :YcmCompleter GoToReferences<CR>
 
 autocmd BufRead,BufNewFile *.ts set filetype=typescript

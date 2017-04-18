@@ -294,11 +294,11 @@ local rainbow = {
 			local label = ""
 			local total = 0
 			for n = 2,4 do
-				label = label .. colorer(60,80,cpulevel[n],"%s") .. '|' 
+				label = label .. colorer(60,80,cpulevel[n],"%02d") .. '|' 
 				total = total + cpulevel[n]
 			end
 			total = total + cpulevel[5]
-			return colorer(200,320,total,"CPU:%s").. "(" ..label .. colorer(60,80,cpulevel[5],"%s") ..')' .. '% '
+			return colorer(200,320,total,"CPU:%s").. "(" ..label .. colorer(60,80,cpulevel[5],"%02d") ..')' .. '% '
 		end
 
 		cpuwidget = wibox.widget.textbox()
@@ -578,9 +578,9 @@ awful.key({ modkey, "Control" }, "Left", function() movetonexttag(-1) end,
 {description = "move and switch to tag on the left", group = "client"}),
 
 awful.key({ modkey,           }, "u", awful.client.urgent.jumpto, {description = "jump to urgent client", group = "client"}),
-awful.key({         modkey}, "Print", function () awful.spawn("screenshot",false)  end,{description = "takes a screenshot", group = "screen"}),
-awful.key({         "Mod1"    }, "Print", function () awful.spawn("crop-screenshot SAVE",false)  end,{description = "takes a screenshot with selection", group = "screen"}),
-awful.key({"Mod1", "Shift" }, "Print", function () awful.spawn("crop-screenshot",false)  end,{description = "takes a screenshot with selection", group = "screen"}),
+awful.key({modkey, "Shift"       }, "Print", function () awful.spawn("screenshot",false)  end,{description = "takes a screenshot", group = "screen"}),
+awful.key({ modkey }, "Print", function () awful.spawn("crop-screenshot SAVE",false)  end,{description = "takes a screenshot with selection", group = "screen"}),
+awful.key({}, "Print", function () awful.spawn("crop-screenshot",false)  end,{description = "takes a screenshot with selection", group = "screen"}),
 awful.key({ modkey,           }, "Tab",
 function ()
 	--awful.client.focus.history.previous()
@@ -609,11 +609,14 @@ awful.key({     }, "XF86MonBrightnessUp", function () awful.spawn("xbacklight +5
 
 awful.key({     }, "XF86AudioLowerVolume", 
 function () awful.spawn("volumedown",false) end,
-{description = "Decrease volume", group = "system"}),
+{description = "Decrease volume", group = "media"}),
 
-awful.key({     }, "XF86AudioRaiseVolume", function () awful.spawn("volumeup",false) end,{description = "Increase volume", group = "system"}),
-awful.key({     }, "XF86AudioMute", function () awful.spawn("volumetoggle",false) end,{description = "Mute volume", group = "system"}),
+awful.key({     }, "XF86AudioRaiseVolume", function () awful.spawn("volumeup",false) end,{description = "Increase volume", group = "media"}),
+awful.key({     }, "XF86AudioMute", function () awful.spawn("volumetoggle",false) end,{description = "Mute volume", group = "media"}),
+awful.key({     }, "XF86AudioPlay", function () awful.spawn("playerctl play-pause",false) end,{description = "Play/Pause current player", group = "media"}),
+awful.key({modkey}, "p", function () awful.spawn("playerctl play-pause",false)  end,{description = "Play/Pause current player", group = "media"}),
 
+--
 --TODO
 awful.key({ modkey,           }, "x",     function () awful.spawn("echo -n '<img src=a onerror=alert(document.domain)>' | xclip -selection c",true) end,{description = "Put sample XSS payload in clipboard", group = "system"}),
 
