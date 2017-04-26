@@ -18,7 +18,7 @@ Moreover, if you plan to use this, beware: in order for some of the bindings to 
 
 `xmodmaprc` is loaded in my X session with xmodmap after the en_us keyboard layout is set
 ```
-setxkbmap us && xmodmap ~/.Xmodmap-lite
+setxkbmap us && xmodmap ~/.xmodmaprc
 ```
 
 the [zshproject](https://github.com/empijei/zshproject) folder is in my `~/empijei` folder
