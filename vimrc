@@ -34,8 +34,8 @@ command! NoDiff diffoff! | syntax on
 nnoremap H :r ! figlet 
 
 "reformat document
-nnoremap <c-f> g=G``
-inoremap <c-f> <Esc>g=G``i
+nnoremap <c-f> mzgg=G`z
+inoremap <c-f> <Esc>mzgg=G`zi
 
 "esc key is a serious overstretch
 inoremap jk <esc>
@@ -169,11 +169,11 @@ if has('gui_running')
 endif "}}}
 
 " Vimscript {{{
-augroup filetype_vim
-	autocmd!
+"augroup filetype_vim
+	"autocmd!
 	"this allows folding in vimscript
-	autocmd FileType vim setlocal foldmethod=marker
-augroup END
+	"autocmd FileType vim setlocal foldmethod=marker
+"augroup END
 "}}}
 
 "Toggle wrapping when needed
@@ -283,7 +283,7 @@ Plugin 'tpope/vim-dispatch' "Spawn processes in background
 Plugin 'majutsushi/tagbar' "Ctags panel integration
 Plugin 'scrooloose/nerdcommenter' "Commenter for most langauges
 
-"various langauges syntax highlight, completion, advanced browing
+"various langauges syntax highlight, completion, advanced browsing
 "MarkDown
 Plugin 'plasticboy/vim-markdown'
 Plugin 'shime/vim-livedown'
