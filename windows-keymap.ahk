@@ -1,17 +1,45 @@
 #q::Send !{F4}
 return
 
->!a::Send à
+>!a::
+if GetKeyState("CapsLock", "T") = 1
+	send, À
+else if GetKeyState("CapsLock", "T") = 0
+	send, à
 return
->!e::Send è
+>!e::
+if GetKeyState("CapsLock", "T") = 1
+	send, È
+else if GetKeyState("CapsLock", "T") = 0
+	send, è
 return
->!i::Send ì
+
+>!i::
+if GetKeyState("CapsLock", "T") = 1
+	send, Ì
+else if GetKeyState("CapsLock", "T") = 0
+	send, ì
 return
->!o::Send ò
+
+>!o::
+if GetKeyState("CapsLock", "T") = 1
+	send, Ò
+else if GetKeyState("CapsLock", "T") = 0
+	send, ò
 return
->!u::Send ù
+
+>!u::
+if GetKeyState("CapsLock", "T") = 1
+	send, Ù
+else if GetKeyState("CapsLock", "T") = 0
+	send, ù
 return
->!;::Send é
+
+>!;::
+if GetKeyState("CapsLock", "T") = 1
+	send, É
+else if GetKeyState("CapsLock", "T") = 0
+	send, é
 return
 
 >![::Send &
