@@ -373,6 +373,13 @@ local rainbow = {
 		vicious.register(netwidget,mynet,"",powersave and 0 or 1)
 
 		datewidget = wibox.widget.textbox()
+		datewidget:connect_signal(
+		"button::press",
+		function()
+			awesome.spawn("chromium 'https://calendar.google.com/'",false)
+		end
+		)
+
 		vicious.register(datewidget, vicious.widgets.date, powersave and "%b%d,%H:%M" or "%b%d,%H:%M:%S", powersave and 30 or 1)
 
 		--local function foo()
@@ -456,7 +463,7 @@ local rainbow = {
 			awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
 
 			-- Create a promptbox for each screen
-			--s.mypromptbox = awful.widget.prompt()
+			s.mypromptbox = awful.widget.prompt()
 			-- Create an imagebox widget which will contains an icon indicating which layout we're using.
 			-- We need one layoutbox per screen.
 			s.mylayoutbox = awful.widget.layoutbox(s)
@@ -605,16 +612,32 @@ awful.key({ modkey,    }, "F4", function () awful.spawn("kbd_backlight UP", fals
 awful.key({ modkey,    }, "F5", function () awful.spawn("xbacklight -5",false) end,{description = "Decrease screen backlight", group = "system"}),
 awful.key({ modkey,    }, "F6", function () awful.spawn("xbacklight +5",false) end,{description = "Increase screen backlight", group = "system"}),
 awful.key({     }, "XF86MonBrightnessDown", function () awful.spawn("xbacklight -5",false) end,{description = "Decrease screen backlight", group = "system"}),
+awful.key({ modkey }, "F8", function () awful.spawn("bash -c 'killall -9 nm-applet; nm-applet'",false) end,{description = "Decrease screen backlight", group = "system"}),
 awful.key({     }, "XF86MonBrightnessUp", function () awful.spawn("xbacklight +5",false) end,{description = "Increase screen backlight", group = "system"}),
-
-awful.key({     }, "XF86AudioLowerVolume", 
-function () awful.spawn("volumedown",false) end,
-{description = "Decrease volume", group = "media"}),
-
+awful.key({     }, "XF86AudioLowerVolume", function () awful.spawn("volumedown",false) end, {description = "Decrease volume", group = "media"}),
 awful.key({     }, "XF86AudioRaiseVolume", function () awful.spawn("volumeup",false) end,{description = "Increase volume", group = "media"}),
 awful.key({     }, "XF86AudioMute", function () awful.spawn("volumetoggle",false) end,{description = "Mute volume", group = "media"}),
 awful.key({     }, "XF86AudioPlay", function () awful.spawn("playerctl play-pause",false) end,{description = "Play/Pause current player", group = "media"}),
 awful.key({modkey}, "p", function () awful.spawn("playerctl play-pause",false)  end,{description = "Play/Pause current player", group = "media"}),
+awful.key({modkey}, "]", function () awful.spawn("playerctl next",false)  end,{description = "Next song", group = "media"}),
+awful.key({modkey}, "[", function () awful.spawn("playerctl previous",false)  end,{description = "Previous song", group = "media"}),
+awful.key({}, "XF86AudioNext", function () awful.spawn("playerctl next",false)  end,{description = "Next song", group = "media"}),
+awful.key({}, "XF86AudioPrev", function () awful.spawn("playerctl previous",false)  end,{description = "Previous song", group = "media"}),
+
+awful.key({ modkey, "Shift"}, "t",    
+function ()
+    awful.prompt.run {
+        prompt       = 'Rename tag: ',
+        text         = awful.tag.selected().name .. ' ',
+		  textbox      = mouse.screen.mypromptbox.widget,
+        --textbox      = atextbox,
+        exe_callback = function(input)
+            if not input or #input == 0 then return end
+				awful.tag.selected().name = input
+        end
+    }
+ end,
+{description = "Rename tag",group="tag"}),
 
 --
 --TODO

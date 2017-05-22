@@ -29,3 +29,5 @@ keycode  58 = m M mu
 keycode 108 = Mode_switch
 keycode 112 = NoSymbol
 keycode 117 = NoSymbol
+keycode  44 = j J ampersand
+keycode  45 = k K asterisk

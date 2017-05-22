@@ -1,6 +1,8 @@
 set nocompatible  "Be IMproved
 syntax on
 let mapleader = "\\"
+scriptencoding utf-8
+set encoding=utf-8
 
 
 "useful misc commands and shortcuts{{{
@@ -40,6 +42,9 @@ inoremap <c-f> <Esc>mzgg=G`zi
 "esc key is a serious overstretch
 inoremap jk <esc>
 
+"stop using esc
+"inoremap <esc> <nop>
+
 "Copy filename and fullfilepath to clipboard
 nnoremap c% :let @+=expand("%")<CR>
 "nnoremap cl :let @+=expand("%:p")<CR>
@@ -62,9 +67,11 @@ set smartcase "search insensitive if no uppercase letters appear in the search p
 set incsearch "move while searching
 set tabstop=3 "prints the tab character as spaces
 set ignorecase "default for smartcase
+set ffs=unix,dos "fileformat for CLRF madness
 set shiftwidth=3 "colum to reindent on reindent command
 set colorcolumn=80 "Mark the 80th character
-set listchars=tab:\│· "Prints tabs as │···
+"set listchars=tab:\│· "Prints tabs as │···
+set listchars=tab:\·\  "Prints tabs as │···
 set fillchars+=vert:\ "removes pipe marker in split
 set clipboard=unnamedplus "System clipboard integration
 set omnifunc=syntaxcomplete#Complete "http://vim.wikia.com/wiki/Omni_completion
@@ -233,10 +240,9 @@ endfunction
 "call Wrap()
 "}}}
 
-
 "Xml beautifier
-autocmd FileType xml,html,htm inoremap <c-f> <Esc>:silent %!xmllint --format --recover - <CR>i
-autocmd FileType xml,html,htm nnoremap <c-f> :silent %!xmllint --format --recover - <CR>
+autocmd FileType xml inoremap <c-f> <Esc>:silent %!xmllint --format --recover - <CR>i
+autocmd FileType xml nnoremap <c-f> :silent %!xmllint --format --recover - <CR>
 
 "JSON formatter
 autocmd FileType json inoremap <c-f> <Esc>:silent %! jq -M -r .<CR>i
@@ -296,7 +302,15 @@ Plugin 'vim-scripts/Nmap-syntax-highlight' "Nse
 Plugin 'kchmck/vim-coffee-script' "Coffee Script
 Plugin 'leafgarland/typescript-vim' "TypeScript
 Plugin 'OmniSharp/omnisharp-vim' "Csharp
+Plugin 'rollxx/vim-antlr' "Antlr
+
+"JS and HTML stuff
 Plugin 'maksimr/vim-jsbeautify' "JS Beautifier
+Plugin 'pangloss/vim-javascript' "JS syntax highlighting and improved indentation
+Plugin 'othree/html5-syntax.vim' "HTML5 syntax improvement
+Plugin 'othree/html5.vim' "HTML5 autocompletion
+Plugin 'othree/javascript-libraries-syntax.vim' "Syntax highlight for the most used JS libraries
+Plugin 'othree/csscomplete.vim' "Enhanced CSS completion
 call vundle#end()
 filetype plugin indent on
 
@@ -348,6 +362,16 @@ let g:go_fmt_command = "goimports"
 let g:go_highlight_build_constraints = 1
 "}}}
 
+"youcompleteme{{{
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_server_keep_logfiles = 1
+let g:ycm_server_log_level = 'debug'
+"}}}
+
+"othree{{{
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS noci
+"}}}
+
 " FileType stuff {{{
 augroup golang
 	autocmd!
@@ -362,6 +386,7 @@ augroup golang
 	autocmd FileType go nmap <leader>t :GoCoverageToggle<CR>
 	autocmd FileType go nmap <leader>a :GoAlternate<CR>
 	autocmd FileType go nmap # <Plug>(go-def)
+	autocmd FileType go nmap Z <Plug>Zeavim
 augroup END
 
 let g:OmniSharp_timeout = 1
@@ -375,7 +400,7 @@ augroup omnisharp_commands
 	autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 
 	"show type information automatically when the cursor stops moving
-	autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
+	"autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
 
 	"The following commands are contextual, based on the current cursor position.
 	autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
@@ -396,6 +421,9 @@ augroup END
 
 "This is when omnisharp fails
 autocmd FileType cs nnoremap gd <C-]>
+
+"Antlr filetype
+au BufRead,BufNewFile *.g set syntax=antlr3
 
 augroup markdown_stuff
 	autocmd!
@@ -422,10 +450,10 @@ let g:tex_flavor = "latex"
 autocmd FileType html set tabstop=1
 autocmd FileType html set nolist
 
-autocmd FileType java,c nnoremap gd <C-]>
+autocmd FileType cpp,objc,objcpp,python nnoremap gd :YcmCompleter GoTo<CR>
+autocmd FileType python,typescript nnoremap gr :YcmCompleter GoToReferences<CR>
 
-autocmd FileType cpp,objc,objcpp,javascript,python nnoremap gd :YcmCompleter GoTo<CR>
-autocmd FileType python,typescript,javascript nnoremap gr :YcmCompleter GoToReferences<CR>
+autocmd FileType java,c,javascript nnoremap gd <C-]>
 
 autocmd BufRead,BufNewFile *.ts set filetype=typescript
 "}}}
