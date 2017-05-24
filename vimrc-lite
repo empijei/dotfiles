@@ -1,0 +1,151 @@
+set nocompatible  "Be IMproved
+syntax on
+let mapleader = "\\"
+scriptencoding utf-8
+set encoding=utf-8
+
+
+"useful misc commands and shortcuts{{{
+"For Hex view
+command! Hex :%!xxd
+command! NoHex :%!xxd -r
+"By default TODOs are highlighted
+let @/="TODO"
+command! C let @/="TODO" 
+
+command! LineEndings e ++ff=dos<CR>
+
+"delete empty lines
+command! Strip g/^\s*$/d
+
+"Toggle between vimdiff and vim
+command! Diff windo diffthis | syntax off
+command! NoDiff diffoff! | syntax on
+
+"reformat document
+nnoremap <c-f> mzgg=G`z
+inoremap <c-f> <Esc>mzgg=G`zi
+
+"esc key is a serious overstretch
+inoremap jk <esc>
+
+"Copy filename and fullfilepath to clipboard
+nnoremap c% :let @+=expand("%")<CR>
+
+"Move through vimgrep results less awkwardly
+nnoremap cn :cn<CR>
+nnoremap cp :cp<CR>
+"}}}
+
+" Some useful sets {{{
+set list "shows invisible characters
+set wrap "Wrapping lines
+set number "line numbers
+set mouse=a "mouse integration
+set hlsearch "highlights search result. use :C to clear
+set modeline "see http://vim.wikia.com/wiki/Modeline_magic
+set smartcase "search insensitive if no uppercase letters appear in the search pattern
+set incsearch "move while searching
+set tabstop=3 "prints the tab character as spaces
+set ignorecase "default for smartcase
+set ffs=unix,dos "fileformat for CLRF madness
+set shiftwidth=3 "colum to reindent on reindent command
+set colorcolumn=80 "Mark the 80th character
+"set listchars=tab:\│· "Prints tabs as │···
+set listchars=tab:\·\  "Prints tabs as │···
+set fillchars+=vert:\ "removes pipe marker in split
+set clipboard=unnamedplus "System clipboard integration
+set omnifunc=syntaxcomplete#Complete "http://vim.wikia.com/wiki/Omni_completion
+"}}}
+
+"Remapping for tabs {{{
+nnoremap th  :tabfirst<CR>
+nnoremap tj  :tabnext<CR>
+nnoremap tp  :tabprev<CR>
+nnoremap tl  :tablast<CR>
+nnoremap tt  :tabedit<CR>
+nnoremap tn  :tabnext<CR>
+nnoremap tm  :tabmove<Space>
+nnoremap td  :tabclose<CR>
+nnoremap ta  :tab all<CR>
+"}}}
+
+"statusline {{{
+set laststatus=2 
+set ttimeoutlen=50
+function! InsertStatuslineColor(mode)
+	" 0 = Dark Gray
+	" 1 = Red
+	" 2 = Lime
+	" 3 = Yellow
+	" 4 = Cyan
+	" 5 = Pink
+	" 6 = Aquamarine
+	" 7 = White
+	if a:mode == 'i'
+		hi StatusLine term=reverse ctermbg=16 ctermfg=7
+	elseif a:mode == 'r'
+		hi StatusLine term=reverse ctermbg=16 ctermfg=1 
+	else
+		hi StatusLine term=reverse ctermbg=16 ctermfg=7
+	endif
+endfunction
+
+au InsertEnter * call InsertStatuslineColor(v:insertmode)
+au InsertChange * call InsertStatuslineColor(v:insertmode)
+au InsertLeave * hi StatusLine term=reverse ctermbg=16 ctermfg=2
+hi StatusLine term=reverse ctermbg=16 ctermfg=2
+set statusline=%<\ %n:%f\ %m%r%y%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
+
+"Ctrl-s to save {{{
+"WARNING: you have to put 
+"stty -ixon
+"in your bashrc file or this will not work
+inoremap <c-s> <esc>:w<CR>a
+"}}}
+
+"move lines on Ctrl+Arrows{{{
+nnoremap <c-j> :m .+1<CR>==
+nnoremap <c-k> :m .-2<CR>==
+inoremap <c-j> <Esc>:m .+1<CR>==gi
+inoremap <c-k> <Esc>:m .-2<CR>==gi
+"}}}
+
+colorscheme default
+highlight ColorColumn ctermbg=blue
+highlight Search cterm=NONE ctermbg=yellow ctermfg=black
+highlight Visual cterm=NONE ctermbg=yellow ctermfg=black
+highlight SpellBad cterm=NONE ctermfg=black ctermbg=red 
+highlight SpellCap cterm=NONE ctermfg=white ctermbg=blue 
+"
+"GVim default theme is seriously ugly{{{
+if has('gui_running')
+	colorscheme torte
+endif "}}}
+
+"Toggle wrapping when needed
+noremap <silent> <Leader>w :call ToggleWrap()<CR>
+function! ToggleWrap()
+	if &wrap
+		echo "Wrap OFF"
+		set nowrap
+	else
+		echo "Wrap ON"
+		set wrap
+	endif
+endfunction
+
+"Break bad habits
+nnoremap <Up> <NOP>
+nnoremap <Down> <NOP>
+nnoremap <Left> <NOP>
+nnoremap <Right> <NOP>
+
+"Avoid stupid typos
+nnoremap W :w<cr>
+nnoremap X :x<cr>
+nnoremap & #
+command! W :w
+command! Q :q
+command! WQ :wq
+command! Wq :wq
