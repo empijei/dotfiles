@@ -123,6 +123,19 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 --mykeyboardlayout = awful.widget.keyboardlayout()
 
 -- {{{ Bob's Wibar
+--
+function onlyonmain(wid)
+local wibox = require("wibox")
+local awful = { widget = { only_on_screen = require("awful.widget.only_on_screen") } }
+
+return {
+    {
+        widget = wid,
+    },
+    screen = "primary",
+    widget = awful.widget.only_on_screen
+}
+end
 
 
 -- {{{ THIS IS FOR DEBUG PURPOSES:
@@ -258,6 +271,7 @@ local rainbow = {
 		end
 		batwidget = wibox.widget.textbox()
 		vicious.register(batwidget, mypower , "$1",powersave and 3 or 1)
+		batwidget = onlyonmain(batwidget)
 
 
 		--batwidget = awful.widget.progressbar()
@@ -286,7 +300,7 @@ local rainbow = {
 		)
 
 		vicious.register(memwidget, mymem, "$1", powersave and 13 or 1)
-		--vicious.register(memwidget, vicious.widgets.mem, "MEM:$1% SWAP:$5%|", 13)
+		memwidget=onlyonmain(memwidget)
 
 		cpuwid =vicious.widgets.cpu
 		local function mycpu()
@@ -309,6 +323,7 @@ local rainbow = {
 		end
 		)
 		vicious.register(cpuwidget, mycpu, "$1",powersave and 7 or 1)
+		cpuwidget=onlyonmain(cpuwidget)
 
 		thermwid = vicious.widgets.thermal
 		local function mytemp()
@@ -320,6 +335,7 @@ local rainbow = {
 		end
 		cputempwidget = wibox.widget.textbox()
 		vicious.register(cputempwidget, mytemp, "$1", powersave and 0 or 4)
+		cputempwidget=onlyonmain(cputempwidget)
 
 		hddwid = vicious.widgets.fs
 		local function myhdd()
@@ -329,6 +345,7 @@ local rainbow = {
 
 		hddwidget = wibox.widget.textbox()
 		vicious.register(hddwidget, myhdd, "HDD:${/ avail_gb}GB ", powersave and 0 or  13)
+		hddwidget=onlyonmain(hddwidget)
 
 		diowid = vicious.widgets.dio
 		local function mydio()
@@ -340,6 +357,7 @@ local rainbow = {
 		end
 		diowidget = wibox.widget.textbox()
 		vicious.register(diowidget,mydio, "$1",powersave and 0 or 1)
+		diowidget=onlyonmain(diowidget)
 
 		local function mynet()
 			if powersave then
@@ -371,6 +389,7 @@ local rainbow = {
 		end
 		netwidget = wibox.widget.textbox()
 		vicious.register(netwidget,mynet,"",powersave and 0 or 1)
+		netwidget=onlyonmain(netwidget)
 
 		datewidget = wibox.widget.textbox()
 		datewidget:connect_signal(
@@ -388,6 +407,7 @@ local rainbow = {
 		foowidget = wibox.widget.textbox()
 		foowidget:set_markup_silently(powersave and '<span color="#008000">🍂</span>' or '<span color="#FF5000">🔥</span>')
 		--vicious.register(foowidget, foo, "$1",1)
+		foowidget=onlyonmain(foowidget)
 
 
 		--use with echo "echo "aweclientwidget:set_text('foo!')" | awesome-client
@@ -489,7 +509,7 @@ local rainbow = {
 				layout = wibox.layout.fixed.horizontal,
 				mylauncher,
 				s.mytaglist,
-				--s.mypromptbox,
+				s.mypromptbox,
 			},
 			s.mytasklist, -- Middle widget
 			{ -- Right widgets

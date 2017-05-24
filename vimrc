@@ -71,6 +71,7 @@ set ffs=unix,dos "fileformat for CLRF madness
 set shiftwidth=3 "colum to reindent on reindent command
 set colorcolumn=80 "Mark the 80th character
 "set listchars=tab:\│· "Prints tabs as │···
+set ttymouse=xterm2 "tmux compatibility
 set listchars=tab:\·\  "Prints tabs as │···
 set fillchars+=vert:\ "removes pipe marker in split
 set clipboard=unnamedplus "System clipboard integration
@@ -153,10 +154,10 @@ inoremap <c-s> <esc>:w<CR>a
 "}}}
 
 "move lines on Ctrl+Arrows{{{
-nnoremap <c-Down> :m .+1<CR>==
-nnoremap <c-Up> :m .-2<CR>==
-inoremap <c-Down> <Esc>:m .+1<CR>==gi
-inoremap <c-Up> <Esc>:m .-2<CR>==gi
+"nnoremap <c-Down> :m .+1<CR>==
+"nnoremap <c-Up> :m .-2<CR>==
+"inoremap <c-Down> <Esc>:m .+1<CR>==gi
+"inoremap <c-Up> <Esc>:m .-2<CR>==gi
 nnoremap <c-j> :m .+1<CR>==
 nnoremap <c-k> :m .-2<CR>==
 inoremap <c-j> <Esc>:m .+1<CR>==gi
