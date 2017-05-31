@@ -620,6 +620,7 @@ end,
 
 -- Standard program
 awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end, {description = "open a terminal", group = "launcher"}),
+awful.key({ modkey, "Shift"}, "Return", function () awful.spawn("lxterminal") end,{description = "opens an alternative terminal", group = "launcher"}),
 awful.key({ modkey, "Control" }, "r", awesome.restart, {description = "reload awesome", group = "awesome"}),
 --awful.key({ modkey, "Shift"   }, "q", awesome.quit, {description = "quit awesome", group = "awesome"}),
 
@@ -664,7 +665,7 @@ function ()
 awful.key({ modkey,           }, "x",     function () awful.spawn("echo -n '<img src=a onerror=alert(document.domain)>' | xclip -selection c",true) end,{description = "Put sample XSS payload in clipboard", group = "system"}),
 
 awful.key({ modkey,           }, ".",     
-function () awful.spawn("xscreensaver-command -lock",false) end,
+function () awful.spawn("bash -c 'xscreensaver-command -lock||slock'",false) end,
 {description = "Locks the screen", group = "system"}),
 
 awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,

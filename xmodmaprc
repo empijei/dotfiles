@@ -31,3 +31,5 @@ keycode 112 = NoSymbol
 keycode 117 = NoSymbol
 keycode  44 = j J ampersand
 keycode  45 = k K asterisk
+keycode  43 = h H parenleft
+keycode  46 = l L parenright
