@@ -17,9 +17,6 @@ command! C let @/="TODO"
 command! LI set spell spelllang=it_it
 command! LE set spell spelllang=en_gb
 command! NoL set spell spelllang=
-"Autocorrect with first autocorrect entry
-nnoremap zz [sz=i1<CR><CR>e
-nnoremap Z [sz=i1<CR><CR>A
 
 command! LineEndings e ++ff=dos<CR>
 
@@ -281,7 +278,7 @@ iabbrev ssig -- <cr> Roberto (empijei) Clapis<cr>robclap8@gmail.com
 nnoremap gd <C-]>
 
 "Call grep from Vim
-command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude tags --exclude *.cf . -e <args>' | copen | execute 'silent /<args>'
+command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude tags --exclude \*.cf . -e <args>' | copen | execute 'silent /<args>'
 " shift-control-* Greps for the word under the cursor
 :nmap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 
@@ -342,14 +339,10 @@ autocmd FileType javascript nnoremap <c-f> :call JsBeautify()<CR>
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
 "Zeavim
-nmap gzz <Plug>Zeavim
-" <leader>z (NORMAL mode)
-vmap gzz <Plug>ZVVisSelection   
-" <leader>z (VISUAL mode)
+nmap Z <Plug>Zeavim
+vmap Z <Plug>ZVVisSelection   
 nmap gz <Plug>ZVMotion         
-" gz{motion} (NORMAL mode)
 nmap gZ <Plug>ZVKeyDocset      
-" <leader><leader>z
 
 "if version >= 700
 "  au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
@@ -446,6 +439,8 @@ augroup markdown_stuff
 	autocmd FileType markdown inoremap <C-i> _
 	autocmd FileType markdown set colorcolumn=
 	autocmd FileType markdown inoremap <c-a> <Esc>[sz=i1<CR><CR>A
+	autocmd FileType markdow nnoremap zz [sz=i1<CR><CR>e
+	autocmd FileType markdow nnoremap Z [sz=i1<CR><CR>A
 	autocmd FileType markdown command! T :Toc
 augroup END
 
@@ -453,6 +448,8 @@ augroup END
 autocmd FileType tex set spell spelllang=it_it
 autocmd FileType tex set colorcolumn=0
 autocmd FileType tex inoremap <c-a> <Esc>[sz=i1<CR><CR>A
+autocmd FileType tex nnoremap zz [sz=i1<CR><CR>e
+autocmd FileType tex nnoremap Z [sz=i1<CR><CR>A
 autocmd BufRead,BufNewFile *.nmap set filetype=nmap
 let g:tex_flavor = "latex"
 
