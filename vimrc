@@ -9,6 +9,7 @@ set encoding=utf-8
 "For Hex view
 command! Hex :%!xxd
 command! NoHex :%!xxd -r
+
 "By default TODOs are highlighted
 let @/="TODO"
 command! C let @/="TODO" 
@@ -71,7 +72,7 @@ set ffs=unix,dos "fileformat for CLRF madness
 set shiftwidth=3 "colum to reindent on reindent command
 set colorcolumn=80 "Mark the 80th character
 "set listchars=tab:\│· "Prints tabs as │···
-set ttymouse=xterm2 "tmux compatibility
+"set ttymouse=xterm2 "tmux compatibility
 set listchars=tab:\·\  "Prints tabs as │···
 set fillchars+=vert:\ "removes pipe marker in split
 set clipboard=unnamedplus "System clipboard integration
@@ -276,6 +277,14 @@ command! Wq :wq
 "Custom actual abbrev
 iabbrev ssig -- <cr> Roberto (empijei) Clapis<cr>robclap8@gmail.com
 
+"GoTo Tag
+nnoremap gd <C-]>
+
+"Call grep from Vim
+command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude tags --exclude *.cf . -e <args>' | copen | execute 'silent /<args>'
+" shift-control-* Greps for the word under the cursor
+:nmap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
+
 "PLUGINS {{{
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -316,7 +325,7 @@ call vundle#end()
 filetype plugin indent on
 
 "Tagbar
-nnoremap T :TagbarToggle<CR>
+command! T :TagbarToggle
 
 "vim-markdown
 let g:vim_markdown_toc_autofit = 1
@@ -437,7 +446,7 @@ augroup markdown_stuff
 	autocmd FileType markdown inoremap <C-i> _
 	autocmd FileType markdown set colorcolumn=
 	autocmd FileType markdown inoremap <c-a> <Esc>[sz=i1<CR><CR>A
-	autocmd FileType markdown nnoremap T :Toc<CR>
+	autocmd FileType markdown command! T :Toc
 augroup END
 
 "Spellcheck for latex
@@ -453,8 +462,6 @@ autocmd FileType html set nolist
 
 autocmd FileType cpp,objc,objcpp,python nnoremap gd :YcmCompleter GoTo<CR>
 autocmd FileType python,typescript nnoremap gr :YcmCompleter GoToReferences<CR>
-
-autocmd FileType java,c,javascript nnoremap gd <C-]>
 
 autocmd BufRead,BufNewFile *.ts set filetype=typescript
 "}}}
