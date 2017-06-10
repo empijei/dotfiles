@@ -1,0 +1,67 @@
+//Copy this in /usr/share/X11/xkb/symbols/empijei
+//and load with `setxkbmap empijei` or
+//make persistent with `sudo localectl set-x11-keymap empijei`
+
+partial default alphanumeric_keys
+xkb_symbols "basic" {
+	// I start from basic US layout
+	include "us(basic)"
+	name[Group1]= "Empijei";
+
+	// Numeric
+	key <AE01> {[ 1, exclam, onesuperior, onequarter ]};
+	key <AE02> {[ 2, at, twosuperior, onehalf ]};
+	key <AE03> {[ 3, numbersign, threesuperior, threequarters ]};
+	key <AE04> {[ 4, dollar, EuroSign ]};
+	key <AE05> {[ 5, percent ]};
+	key <AE06> {[ 6, asciicircum ]};
+	key <AE07> {[ 7, ampersand ]};
+	key <AE08> {[ 8, asterisk, infinity, infinity ]};
+	key <AE09> {[ 9, parenleft ]};
+	key <AE10> {[ 0, parenright ]};
+
+	// Alphabetic
+	key <AD01> {[ q, Q ]};
+	key <AD02> {[ w, W, uparrow, uparrow ]};
+	key <AD03> {[ e, E, egrave, Egrave, EuroSign ]};
+	key <AD04> {[ r, R, registered ]};
+	key <AD05> {[ t, T, trademark ]};
+	key <AD06> {[ y, Y ]};
+	key <AD07> {[ u, U, ugrave, Ugrave ]};
+	key <AD08> {[ i, I, igrave, icircumflex ]};
+	key <AD09> {[ o, O, ograve, Ograve ]};
+	key <AD10> {[ p, P, Greek_pi ]};
+	key <AC01> {[ a, A, agrave, leftarrow ]};
+	key <AC02> {[ s, S, downarrow ]};
+	key <AC03> {[ d, D, rightarrow ]};
+	key <AC04> {[ f, F ]};
+	key <AC05> {[ g, G ]};
+	key <AC06> {[ h, H ]};
+	key <AC07> {[ j, J, parenleft ]};
+	key <AC08> {[ k, K, parenright ]};
+	key <AC09> {[ l, L ]};
+	key <AB01> {[ z, Z ]};
+	key <AB02> {[ x, X, ballotcross ]};
+	key <AB03> {[ c, C, copyright ]};
+	key <AB04> {[ v, V, checkmark ]};
+	key <AB05> {[ b, B ]};
+	key <AB06> {[ n, N ]};
+	key <AB07> {[ m, M, mu ]};
+
+
+	// Symbols
+	key <AB08> {[ comma, less ]};
+	key <AB09> {[ period, greater ]};
+	key <AB10> {[ slash, question, questiondown ]};
+	key <AC10> {[ semicolon, colon, eacute, Eacute, eacute, Eacute ]};
+	key <AC11> {[ apostrophe, quotedbl, degree ]};
+	key <AD11> {[ bracketleft, braceleft, ampersand ]};
+	key <AD12> {[ bracketright, braceright, asterisk ]};
+	key <AE11> {[ minus, underscore, asciicircum ]};
+	key <AE12> {[ equal, plus, notequal, plusminus ]};
+	key <BKSL> {[ backslash, bar, section ]};
+	key <TLDE> {[ grave, asciitilde ]};
+
+	// Switch with right alt
+	include "level3(ralt_switch)"
+};

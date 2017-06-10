@@ -607,6 +607,7 @@ awful.key({ modkey, "Control" }, "Left", function() movetonexttag(-1) end,
 awful.key({ modkey,           }, "u", awful.client.urgent.jumpto, {description = "jump to urgent client", group = "client"}),
 awful.key({modkey, "Shift"       }, "Print", function () awful.spawn("screenshot",false)  end,{description = "takes a screenshot", group = "screen"}),
 awful.key({ modkey }, "Print", function () awful.spawn("crop-screenshot SAVE",false)  end,{description = "takes a screenshot with selection", group = "screen"}),
+awful.key({ modkey, "Shift" }, "Print", function () awful.spawn("crop-screenshot OCR",false)  end,{description = "takes a screenshot with selection and uses an OCR to read the text inside the image", group = "screen"}),
 awful.key({}, "Print", function () awful.spawn("crop-screenshot",false)  end,{description = "takes a screenshot with selection", group = "screen"}),
 awful.key({ modkey,           }, "Tab",
 function ()
@@ -874,7 +875,7 @@ awful.rules.rules = {
 		},
 		role = {
 			"AlarmWindow",  -- Thunderbird's calendar.
-			"pop-up",       -- e.g. Google Chrome's (detached) Developer Tools.
+			--"pop-up",       -- e.g. Google Chrome's (detached) Developer Tools.
 		}
 	}, properties = { floating = true }},
 

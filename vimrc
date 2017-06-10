@@ -295,6 +295,7 @@ Plugin 'KabbAmine/zeavim.vim' "Integration with Zeal
 Plugin 'tpope/vim-dispatch' "Spawn processes in background
 Plugin 'majutsushi/tagbar' "Ctags panel integration
 Plugin 'scrooloose/nerdcommenter' "Commenter for most langauges
+Plugin 'jiangmiao/auto-pairs' "Autoclose parens and alikes
 
 "various langauges syntax highlight, completion, advanced browsing
 "MarkDown
