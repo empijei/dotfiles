@@ -295,7 +295,7 @@ Plugin 'KabbAmine/zeavim.vim' "Integration with Zeal
 Plugin 'tpope/vim-dispatch' "Spawn processes in background
 Plugin 'majutsushi/tagbar' "Ctags panel integration
 Plugin 'scrooloose/nerdcommenter' "Commenter for most langauges
-Plugin 'jiangmiao/auto-pairs' "Autoclose parens and alikes
+"Plugin 'jiangmiao/auto-pairs' "Autoclose parens and alikes
 
 "various langauges syntax highlight, completion, advanced browsing
 "MarkDown
@@ -328,6 +328,9 @@ command! T :TagbarToggle
 "vim-markdown
 let g:vim_markdown_toc_autofit = 1
 let g:vim_markdown_folding_disabled = 1
+
+"Autopairs
+"let g:AutoPairsUseInsertedCount = 1
 
 "NerdTree
 map <C-n> :NERDTreeToggle<CR>

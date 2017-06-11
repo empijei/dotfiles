@@ -23,7 +23,7 @@ xkb_symbols "basic" {
 	// Alphabetic
 	key <AD01> {[ q, Q ]};
 	key <AD02> {[ w, W, uparrow, uparrow ]};
-	key <AD03> {[ e, E, egrave, Egrave, EuroSign ]};
+	key <AD03> {[ e, E, egrave, Egrave ]};
 	key <AD04> {[ r, R, registered ]};
 	key <AD05> {[ t, T, trademark ]};
 	key <AD06> {[ y, Y ]};
