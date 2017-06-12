@@ -1,3 +1,11 @@
+"To use this .vimrc please install Vundle
+"`git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
+"then run `vim +PluginInstall +qa`
+"then run `vim +GoInstallBinaries +qa`
+"finally run `cd ~/.vim/bundle/YouCompleteMe
+"git submodule update --init --recursive
+"python2 install.py --omnisharp-completer --gocode-completer --clang-completer
+
 set nocompatible  "Be IMproved
 syntax on
 let mapleader = "\\"

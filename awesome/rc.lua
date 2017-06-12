@@ -49,6 +49,9 @@ end
 beautiful.init(awful.util.get_xdg_config_home().."awesome/themes/default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
+--alternative_terminal = "terminator"
+--terminal = "lxterminal"
+alternative_terminal = "lxterminal"
 terminal = "terminator"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
@@ -621,7 +624,7 @@ end,
 
 -- Standard program
 awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end, {description = "open a terminal", group = "launcher"}),
-awful.key({ modkey, "Shift"}, "Return", function () awful.spawn("lxterminal") end,{description = "opens an alternative terminal", group = "launcher"}),
+awful.key({ modkey, "Shift"}, "Return", function () awful.spawn(alternative_terminal) end,{description = "opens an alternative terminal", group = "launcher"}),
 awful.key({ modkey, "Control" }, "r", awesome.restart, {description = "reload awesome", group = "awesome"}),
 --awful.key({ modkey, "Shift"   }, "q", awesome.quit, {description = "quit awesome", group = "awesome"}),
 
