@@ -16,6 +16,7 @@ command! C let @/="TODO"
 "Spellcheck
 command! LI set spell spelllang=it_it
 command! LE set spell spelllang=en_gb
+inoremap <c-a> <Esc>[sz=i1<CR><CR>A
 command! NoL set spell spelllang=
 
 command! LineEndings e ++ff=dos<CR>
@@ -57,6 +58,7 @@ nnoremap cp :cp<CR>
 " Some useful sets {{{
 set list "shows invisible characters
 set wrap "Wrapping lines
+"set t_te= "do not clear on vim close
 set number "line numbers
 set mouse=a "mouse integration
 set hlsearch "highlights search result. use :C to clear
@@ -287,14 +289,14 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim' "Plugin manager
-Plugin 'scrooloose/nerdtree' "File browser left panel
-Plugin 'Xuyuanp/nerdtree-git-plugin' "Addon for nerdtree to support git tags
 Plugin 'Valloric/YouCompleteMe' "Completer for most langauges
-Plugin 'ervandew/supertab' "Tab completion
-Plugin 'KabbAmine/zeavim.vim' "Integration with Zeal
 Plugin 'tpope/vim-dispatch' "Spawn processes in background
+Plugin 'ervandew/supertab' "Tab completion
 Plugin 'majutsushi/tagbar' "Ctags panel integration
 Plugin 'scrooloose/nerdcommenter' "Commenter for most langauges
+Plugin 'scrooloose/nerdtree' "File browser left panel
+Plugin 'Xuyuanp/nerdtree-git-plugin' "Addon for nerdtree to support git tags
+Plugin 'KabbAmine/zeavim.vim' "Integration with Zeal
 "Plugin 'jiangmiao/auto-pairs' "Autoclose parens and alikes
 
 "various langauges syntax highlight, completion, advanced browsing
@@ -303,22 +305,24 @@ Plugin 'plasticboy/vim-markdown'
 Plugin 'shime/vim-livedown'
 Plugin 'godlygeek/tabular'
 
+"Languages I use
 Plugin 'fatih/vim-go' "Golang
-Plugin 'keith/swift.vim' "Swift
-Plugin 'davidhalter/jedi-vim' "Python
-Plugin 'vim-scripts/Nmap-syntax-highlight' "Nse
-Plugin 'kchmck/vim-coffee-script' "Coffee Script
-Plugin 'leafgarland/typescript-vim' "TypeScript
-Plugin 'OmniSharp/omnisharp-vim' "Csharp
-Plugin 'rollxx/vim-antlr' "Antlr
+"Plugin 'davidhalter/jedi-vim' "Python
+"Plugin 'vim-scripts/Nmap-syntax-highlight' "Nse
+"Plugin 'OmniSharp/omnisharp-vim' "Csharp
 
 "JS and HTML stuff
+"Plugin 'pangloss/vim-javascript' "JS syntax highlighting and improved indentation
+"Plugin 'othree/html5-syntax.vim' "HTML5 syntax improvement
+"Plugin 'othree/html5.vim' "HTML5 autocompletion
+"Plugin 'othree/javascript-libraries-syntax.vim' "Syntax highlight for the most used JS libraries
+"Plugin 'othree/csscomplete.vim' "Enhanced CSS completion
+
+"Code inspection
 Plugin 'maksimr/vim-jsbeautify' "JS Beautifier
-Plugin 'pangloss/vim-javascript' "JS syntax highlighting and improved indentation
-Plugin 'othree/html5-syntax.vim' "HTML5 syntax improvement
-Plugin 'othree/html5.vim' "HTML5 autocompletion
-Plugin 'othree/javascript-libraries-syntax.vim' "Syntax highlight for the most used JS libraries
-Plugin 'othree/csscomplete.vim' "Enhanced CSS completion
+"Plugin 'keith/swift.vim' "Swift
+"Plugin 'kchmck/vim-coffee-script' "Coffee Script
+"Plugin 'leafgarland/typescript-vim' "TypeScript
 call vundle#end()
 filetype plugin indent on
 
