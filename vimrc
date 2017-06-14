@@ -2,9 +2,15 @@
 "`git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
 "then run `vim +PluginInstall +qa`
 "then run `vim +GoInstallBinaries +qa`
-"finally run `cd ~/.vim/bundle/YouCompleteMe
-"git submodule update --init --recursive
-"python2 install.py --omnisharp-completer --gocode-completer --clang-completer
+"finally run 
+"	cd ~/.vim/bundle/YouCompleteMe
+"	git submodule update --init --recursive
+"	python2 install.py --omnisharp-completer --gocode-completer --clang-completer
+"
+"	cd ~/.vim/bundle/omnisharp-vim
+"	git submodule update --init --recursive
+"	cd server
+"	xbuild
 
 set nocompatible  "Be IMproved
 syntax on
@@ -74,8 +80,10 @@ set modeline "see http://vim.wikia.com/wiki/Modeline_magic
 set smartcase "search insensitive if no uppercase letters appear in the search pattern
 set incsearch "move while searching
 set tabstop=3 "prints the tab character as spaces
+set cursorline "underline current line
 set ignorecase "default for smartcase
 set ffs=unix,dos "fileformat for CLRF madness
+set scrolloff=7 "Always keep at least some lines of visible context around cursor
 set shiftwidth=3 "colum to reindent on reindent command
 set colorcolumn=80 "Mark the 80th character
 "set listchars=tab:\│· "Prints tabs as │···
@@ -98,6 +106,10 @@ nnoremap tm  :tabmove<Space>
 nnoremap td  :tabclose<CR>
 nnoremap ta  :tab all<CR>
 "}}}
+
+"Keep better track of cursor while not in insert mode
+au InsertEnter * set nocursorline "do not underline current line in insert mode
+au InsertLeave * set cursorline "underline current line in other modes
 
 "statusline {{{
 set laststatus=2 
@@ -161,6 +173,9 @@ inoremap <F6> <C-R>"=strftime("%d/%m/%Y")<CR>
 inoremap <c-s> <esc>:w<CR>a
 "}}}
 
+"Git commits should be 50 chars long
+autocmd FileType gitcommit set colorcolumn=50 
+
 "move lines on Ctrl+Arrows{{{
 "nnoremap <c-Down> :m .+1<CR>==
 "nnoremap <c-Up> :m .-2<CR>==
@@ -179,10 +194,6 @@ highlight Visual cterm=NONE ctermbg=yellow ctermfg=black
 highlight SpellBad cterm=NONE ctermfg=black ctermbg=red 
 highlight SpellCap cterm=NONE ctermfg=white ctermbg=blue 
 "
-"GVim default theme is seriously ugly{{{
-if has('gui_running')
-	colorscheme torte
-endif "}}}
 
 " Vimscript {{{
 "augroup filetype_vim
@@ -249,6 +260,10 @@ endfunction
 "call Wrap()
 "}}}
 
+"Sorround with " or ' the current word
+noremap <leader>" bi"<esc>ea"
+noremap <leader>' bi'<esc>ea'
+
 "Xml beautifier
 autocmd FileType xml inoremap <c-f> <Esc>:silent %!xmllint --format --recover - <CR>i
 autocmd FileType xml nnoremap <c-f> :silent %!xmllint --format --recover - <CR>
@@ -284,13 +299,16 @@ command! Wq :wq
 "Custom actual abbrev
 iabbrev ssig -- <cr> Roberto (empijei) Clapis<cr>robclap8@gmail.com
 
+"Custom actual abbrev
+iabbrev sssig -- <cr> Empijei <cr> empijei@gmail.com
+
 "GoTo Tag
 nnoremap gd <C-]>
 
 "Call grep from Vim
 command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude tags --exclude \*.cf . -e <args>' | copen | execute 'silent /<args>'
 " shift-control-* Greps for the word under the cursor
-:nmap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
+nnoremap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 
 "PLUGINS {{{
 filetype off
@@ -307,6 +325,13 @@ Plugin 'Xuyuanp/nerdtree-git-plugin' "Addon for nerdtree to support git tags
 Plugin 'KabbAmine/zeavim.vim' "Integration with Zeal
 "Plugin 'jiangmiao/auto-pairs' "Autoclose parens and alikes
 
+"Eyecandy
+if has('gui_running')
+	Plugin 'altercation/vim-colors-solarized' "Theme
+endif
+Plugin 'ryanoasis/vim-devicons' "Icons for filetypes, this requires a nerdfont
+Plugin 'tiagofumo/vim-nerdtree-syntax-highlight' "colored icons for nerdtree
+
 "various langauges syntax highlight, completion, advanced browsing
 "MarkDown
 Plugin 'plasticboy/vim-markdown'
@@ -317,7 +342,7 @@ Plugin 'godlygeek/tabular'
 Plugin 'fatih/vim-go' "Golang
 "Plugin 'davidhalter/jedi-vim' "Python
 "Plugin 'vim-scripts/Nmap-syntax-highlight' "Nse
-"Plugin 'OmniSharp/omnisharp-vim' "Csharp
+Plugin 'OmniSharp/omnisharp-vim' "Csharp
 
 "JS and HTML stuff
 "Plugin 'pangloss/vim-javascript' "JS syntax highlighting and improved indentation
@@ -331,6 +356,9 @@ Plugin 'maksimr/vim-jsbeautify' "JS Beautifier
 "Plugin 'keith/swift.vim' "Swift
 "Plugin 'kchmck/vim-coffee-script' "Coffee Script
 "Plugin 'leafgarland/typescript-vim' "TypeScript
+
+"My stuff
+Plugin 'empijei/empijei-vim'
 call vundle#end()
 filetype plugin indent on
 
@@ -343,6 +371,14 @@ let g:vim_markdown_folding_disabled = 1
 
 "Autopairs
 "let g:AutoPairsUseInsertedCount = 1
+
+"Gvim is seriously ugly
+if has('gui_running')
+	set background=dark
+	colorscheme solarized
+	set guifont=OpenDyslexicMono\ Nerd\ Font\ Regular\ 9
+endif 
+
 
 "NerdTree
 map <C-n> :NERDTreeToggle<CR>
@@ -408,15 +444,25 @@ augroup golang
 	autocmd FileType go nmap Z <Plug>Zeavim
 augroup END
 
-let g:OmniSharp_timeout = 1
+"Timeout in seconds to wait for a response from the server
+let g:OmniSharp_timeout = 5
 " this setting controls how long to wait (in ms) before fetching type / symbol information.
 set updatetime=500
-" Remove 'Press Enter to continue' message when type information is longer than one line.
+"This is the default value, setting it isn't actually necessary
+let g:OmniSharp_host = "http://localhost:2000"
+
+"Use roslyn
+"let g:OmniSharp_server_type = 'v1'
+"let g:OmniSharp_server_type = 'roslyn'
+
 augroup omnisharp_commands
 	autocmd!
 
 	"Set autocomplete function to OmniSharp (if not using YouCompleteMe completion plugin)
 	autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
+	
+	" Remove 'Press Enter to continue' message when type information is longer than one line.
+	autocmd FileType cs set cmdheight=2
 
 	"show type information automatically when the cursor stops moving
 	"autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
@@ -439,7 +485,7 @@ augroup omnisharp_commands
 augroup END
 
 "This is when omnisharp fails
-autocmd FileType cs nnoremap gd <C-]>
+autocmd FileType cs nnoremap gtd <C-]>
 
 "Antlr filetype
 au BufRead,BufNewFile *.g set syntax=antlr3
@@ -466,8 +512,18 @@ autocmd FileType tex set colorcolumn=0
 autocmd FileType tex inoremap <c-a> <Esc>[sz=i1<CR><CR>A
 autocmd FileType tex nnoremap zz [sz=i1<CR><CR>e
 autocmd FileType tex nnoremap Z [sz=i1<CR><CR>A
-autocmd BufRead,BufNewFile *.nmap set filetype=nmap
 let g:tex_flavor = "latex"
+
+"Syntax for cf (quickfix) files
+autocmd BufRead,BufNewFile *.cf set filetype=quickfix
+autocmd FileType quickfix set colorcolumn=
+
+"Syntax for http files
+autocmd BufRead,BufNewFile *.http set filetype=headers
+autocmd FileType headers  set colorcolumn=
+
+"Syntax for nmap files
+autocmd BufRead,BufNewFile *.nmap set filetype=nmap
 
 "Yes, I indent HTML
 autocmd FileType html set tabstop=1
