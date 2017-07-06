@@ -62,6 +62,17 @@ xkb_symbols "basic" {
 	key <BKSL> {[ backslash, bar, section ]};
 	key <TLDE> {[ grave, asciitilde ]};
 
+	// Caps lock is done with both shifts
+	key <LFSH> {[ Shift_L, Caps_Lock ]};
+	key <RTSH> {[ Shift_R, Caps_Lock ]};
+
+
+	// Disable Caps_Lock and give it Escape function
+	key <CAPS> {[ Escape ]};
+	// Disable Escape to stop stretching. Painful but necessary.
+	key <ESC>  {[ VoidSymbol ]};
+
+
 	// Switch with right alt
 	include "level3(ralt_switch)"
 };

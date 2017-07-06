@@ -86,6 +86,7 @@ set ffs=unix,dos "fileformat for CLRF madness
 set scrolloff=7 "Always keep at least some lines of visible context around cursor
 set shiftwidth=3 "colum to reindent on reindent command
 set colorcolumn=80 "Mark the 80th character
+set timeoutlen=500
 "set listchars=tab:\│· "Prints tabs as │···
 "set ttymouse=xterm2 "tmux compatibility
 set listchars=tab:\·\  "Prints tabs as │···
@@ -163,7 +164,7 @@ set statusline=%<\ %n:%f\ %m%r%y%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
 nnoremap <F7> "=strftime("%c")<CR>P
 inoremap <F7> <C-R>=strftime("%c")<CR>
 nnoremap <F6> "=strftime("%d/%m/%Y")<CR>P
-inoremap <F6> <C-R>"=strftime("%d/%m/%Y")<CR>
+inoremap <F6> <C-R>=strftime("%d/%m/%Y")<CR>
 "}}}
 
 "Ctrl-s to save {{{
@@ -302,11 +303,11 @@ iabbrev ssig -- <cr> Roberto (empijei) Clapis<cr>robclap8@gmail.com
 "Custom actual abbrev
 iabbrev sssig -- <cr> Empijei <cr> empijei@gmail.com
 
-"GoTo Tag
-nnoremap gd <C-]>
+"This double bind is used in case some override fails
+nnoremap gtd <C-]>
 
-"Call grep from Vim
-command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude tags --exclude \*.cf . -e <args>' | copen | execute 'silent /<args>'
+"Call grep from Vim. I know there is :vimgrep, but it is too slow.
+command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude tags --exclude \*.cf . -e <args>' | copen | execute 'silent /<args>' | redraw!
 " shift-control-* Greps for the word under the cursor
 nnoremap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 
@@ -324,6 +325,8 @@ Plugin 'scrooloose/nerdtree' "File browser left panel
 Plugin 'Xuyuanp/nerdtree-git-plugin' "Addon for nerdtree to support git tags
 Plugin 'KabbAmine/zeavim.vim' "Integration with Zeal
 "Plugin 'jiangmiao/auto-pairs' "Autoclose parens and alikes
+Plugin 'bogado/file-line' "interpret file:line:column as it should 
+Plugin 'jceb/vim-editqf' "Increase qf functionalities
 
 "Eyecandy
 if has('gui_running')
@@ -362,9 +365,6 @@ Plugin 'empijei/empijei-vim'
 call vundle#end()
 filetype plugin indent on
 
-"Tagbar
-command! T :TagbarToggle
-
 "vim-markdown
 let g:vim_markdown_toc_autofit = 1
 let g:vim_markdown_folding_disabled = 1
@@ -374,9 +374,9 @@ let g:vim_markdown_folding_disabled = 1
 
 "Gvim is seriously ugly
 if has('gui_running')
-	set background=dark
+	set background=light
 	colorscheme solarized
-	set guifont=OpenDyslexicMono\ Nerd\ Font\ Regular\ 9
+	set guifont=DejaVuSansMono\ Nerd\ Font\ Book\ 11
 endif 
 
 
@@ -396,12 +396,21 @@ vmap Z <Plug>ZVVisSelection
 nmap gz <Plug>ZVMotion         
 nmap gZ <Plug>ZVKeyDocset      
 
+let g:zv_file_types = {
+			\	'cpp' : 'cpp',
+			\	'cs' : 'net',
+			\ }
+
+"jceb/vim-editqf
+command! -nargs=+ -complete=file QL execute 'QFLoad <args>' | execute 'let g:editqf_saveqf_filename="<args>"'| copen
+command! -nargs=? -complete=file QS :call editqf#Save("!", "qf", <f-args>)
+
 "if version >= 700
 "  au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
 "endif
 
 "vim-livedown
-let g:livedown_autorun = 0
+let g:livedown_autorun = 1
 let g:livedown_open = 1
 let g:livedown_port = 1337
 let g:livedown_browser = "chromium"
@@ -415,7 +424,13 @@ let g:go_highlight_functions = 1
 let g:go_highlight_interfaces = 1
 let g:go_fmt_command = "goimports"
 let g:go_highlight_build_constraints = 1
+command! GoGenDoc execute 'normal yeO// ' | execute 'normal pa ' | startinsert
 "}}}
+
+"Tagbar
+command! T :TagbarToggle
+nnoremap <c-t> :TagbarToggle<CR>
+inoremap <c-t> <Esc>:TagbarToggle<CR>i
 
 "youcompleteme{{{
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
@@ -468,7 +483,7 @@ augroup omnisharp_commands
 	"autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
 
 	"The following commands are contextual, based on the current cursor position.
-	autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
+	autocmd FileType cs nnoremap gyd :OmniSharpGotoDefinition<cr>
 	autocmd FileType cs nnoremap fi :OmniSharpFindImplementations<cr>
 	autocmd FileType cs nnoremap ft :OmniSharpFindType<cr>
 	autocmd FileType cs nnoremap fs :OmniSharpFindSymbol<cr>
@@ -483,9 +498,6 @@ augroup omnisharp_commands
 	autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
 
 augroup END
-
-"This is when omnisharp fails
-autocmd FileType cs nnoremap gtd <C-]>
 
 "Antlr filetype
 au BufRead,BufNewFile *.g set syntax=antlr3
@@ -515,7 +527,6 @@ autocmd FileType tex nnoremap Z [sz=i1<CR><CR>A
 let g:tex_flavor = "latex"
 
 "Syntax for cf (quickfix) files
-autocmd BufRead,BufNewFile *.cf set filetype=quickfix
 autocmd FileType quickfix set colorcolumn=
 
 "Syntax for http files
@@ -526,11 +537,14 @@ autocmd FileType headers  set colorcolumn=
 autocmd BufRead,BufNewFile *.nmap set filetype=nmap
 
 "Yes, I indent HTML
-autocmd FileType html set tabstop=1
-autocmd FileType html set nolist
+"autocmd FileType html set tabstop=1
+"autocmd FileType html set nolist
 
-autocmd FileType cpp,objc,objcpp,python nnoremap gd :YcmCompleter GoTo<CR>
+autocmd FileType cpp,objc,objcpp,python nnoremap gyd :YcmCompleter GoTo<CR>
 autocmd FileType python,typescript nnoremap gr :YcmCompleter GoToReferences<CR>
 
 autocmd BufRead,BufNewFile *.ts set filetype=typescript
+
+"An underline is too invasive, let's just change the contrast
+hi CursorLine cterm=NONE ctermbg=black
 "}}}

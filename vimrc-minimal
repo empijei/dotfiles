@@ -1,0 +1,59 @@
+set nocompatible  "Be IMproved
+scriptencoding utf-8
+set encoding=utf-8
+nnoremap <c-f> mzgg=G`z
+inoremap <c-f> <Esc>mzgg=G`zi
+inoremap jk <esc>
+nnoremap c% :let @+=expand("%")<CR>
+nnoremap cn :cn<CR>
+nnoremap cp :cp<CR>
+set list "shows invisible characters
+set wrap "Wrapping lines
+set number "line numbers
+set hlsearch "highlights search result. use :C to clear
+set modeline "see http://vim.wikia.com/wiki/Modeline_magic
+set smartcase "search insensitive if no uppercase letters appear in the search pattern
+set incsearch "move while searching
+set tabstop=3 "prints the tab character as spaces
+set ignorecase "default for smartcase
+set ffs=unix,dos "fileformat for CLRF madness
+set shiftwidth=3 "colum to reindent on reindent command
+set colorcolumn=80 "Mark the 80th character
+set listchars=tab:\·\  "Prints tabs as │···
+set fillchars+=vert:\ "removes pipe marker in split
+set clipboard=unnamedplus "System clipboard integration
+set omnifunc=syntaxcomplete#Complete "http://vim.wikia.com/wiki/Omni_completion
+nnoremap th  :tabfirst<CR>
+nnoremap tj  :tabnext<CR>
+nnoremap tp  :tabprev<CR>
+nnoremap tl  :tablast<CR>
+nnoremap tt  :tabedit<CR>
+nnoremap tn  :tabnext<CR>
+nnoremap tm  :tabmove<Space>
+nnoremap td  :tabclose<CR>
+nnoremap ta  :tab all<CR>
+set laststatus=2 
+set ttimeoutlen=50
+hi StatusLine term=reverse ctermbg=16 ctermfg=2
+set statusline=%<\ %n:%f\ %m%r%y%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
+inoremap <c-s> <esc>:w<CR>a
+nnoremap <c-j> :m .+1<CR>==
+nnoremap <c-k> :m .-2<CR>==
+inoremap <c-j> <Esc>:m .+1<CR>==gi
+inoremap <c-k> <Esc>:m .-2<CR>==gi
+highlight ColorColumn ctermbg=blue
+highlight Search cterm=NONE ctermbg=yellow ctermfg=black
+highlight Visual cterm=NONE ctermbg=yellow ctermfg=black
+highlight SpellBad cterm=NONE ctermfg=black ctermbg=red 
+highlight SpellCap cterm=NONE ctermfg=white ctermbg=blue 
+if has('gui_running')
+	colorscheme torte
+endif "}}}
+noremap <silent> <Leader>w :call ToggleWrap()<CR>
+nnoremap <Up> <NOP>
+nnoremap <Down> <NOP>
+nnoremap <Left> <NOP>
+nnoremap <Right> <NOP>
+nnoremap W :w<cr>
+nnoremap X :x<cr>
+nnoremap & #

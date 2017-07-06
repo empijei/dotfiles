@@ -53,8 +53,9 @@ beautiful.init(awful.util.get_xdg_config_home().."awesome/themes/default/theme.l
 --terminal = "lxterminal"
 alternative_terminal = "lxterminal"
 terminal = "terminator"
-editor = os.getenv("EDITOR") or "nano"
+editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
+screen_delta=1
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -176,6 +177,27 @@ function print_r ( t )
 	print()
 end
 --}}}
+
+local function delete_tag()
+    local t = awful.screen.focused().selected_tag
+    if not t then return end
+    t:delete()
+end
+
+local function add_named_tag()
+    awful.prompt.run {
+        prompt       = "New tag name: ",
+        textbox      = awful.screen.focused().mypromptbox.widget,
+        exe_callback = function(new_name)
+            if not new_name or #new_name == 0 then return end
+				awful.tag.add(new_name,{screen= awful.screen.focused() }):view_only()
+        end
+    }
+end
+
+local function add_tag()
+    awful.tag.add("| |",{screen= awful.screen.focused() }):view_only()
+end
 
 local function colorer(orangeT,redT,current,format,invert)
 	if not format then
@@ -398,7 +420,7 @@ local rainbow = {
 		datewidget:connect_signal(
 		"button::press",
 		function()
-			awesome.spawn("chromium 'https://calendar.google.com/'",false)
+			awesome.spawn("calnotify",false)
 		end
 		)
 
@@ -559,14 +581,10 @@ end
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
-awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
-{description="show help", group="awesome"}),
-awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
-{description = "view previous", group = "tag"}),
-awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
-{description = "view next", group = "tag"}),
-awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
-{description = "go back", group = "tag"}),
+awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,{description="show help", group="awesome"}),
+awful.key({ modkey,           }, "Left",   awful.tag.viewprev,{description = "view previous", group = "tag"}),
+awful.key({ modkey,           }, "Right",  awful.tag.viewnext, {description = "view next", group = "tag"}),
+awful.key({ modkey,           }, "Escape", awful.tag.history.restore, {description = "go back", group = "tag"}),
 
 awful.key({ modkey,           }, "j",
 function ()
@@ -587,20 +605,22 @@ end,
 awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end, {description = "swap with next client by index", group = "client"}),
 awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end, {description = "swap with previous client by index", group = "client"}),
 
-awful.key({ modkey, }, "d", function () awful.screen.focus_relative( 1) end, {description = "focus next", group = "screen"}),
-awful.key({ modkey, }, "a", function () awful.screen.focus_relative(-1) end, {description = "focus previous", group = "screen"}),
+
+awful.key({ modkey, "Shift"   }, "space", function () screen_delta=-screen_delta end,{description = "invert screen indexing", group = "screen"}),
+awful.key({ modkey, }, "d", function () awful.screen.focus_relative(screen_delta) end, {description = "focus next", group = "screen"}),
+awful.key({ modkey, }, "a", function () awful.screen.focus_relative(-screen_delta) end, {description = "focus previous", group = "screen"}),
 awful.key({ modkey,  "Shift"}, "d",      function() 
 	if client.focus then
-		client.focus:move_to_screen(client.focus.screen.index + 1)
+		client.focus:move_to_screen(client.focus.screen.index + screen_delta)
 	end
 end,
-{description = "Move to screen on the right", group = "client"}),
+{description = "Move to next screen", group = "client"}),
 awful.key({ modkey,  "Shift"}, "a",      function() 
 	if client.focus then
-		client.focus:move_to_screen(client.focus.screen.index -1)
+		client.focus:move_to_screen(client.focus.screen.index - screen_delta)
 	end
 end,
-{description = "Move to screen on the left", group = "client"}),
+{description = "Move to previous screen", group = "client"}),
 
 awful.key({ modkey, "Control" }, "Right", function() movetonexttag(1) end,
 {description = "move and switch to tag on the right", group = "client"}),
@@ -669,7 +689,7 @@ function ()
 awful.key({ modkey,           }, "x",     function () awful.spawn("echo -n '<img src=a onerror=alert(document.domain)>' | xclip -selection c",true) end,{description = "Put sample XSS payload in clipboard", group = "system"}),
 
 awful.key({ modkey,           }, ".",     
-function () awful.spawn("bash -c 'xscreensaver-command -lock||slock'",false) end,
+function () awful.spawn("bash -c 'playerctl pause; xscreensaver-command -lock||slock'",false) end,
 {description = "Locks the screen", group = "system"}),
 
 awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,
