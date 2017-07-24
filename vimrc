@@ -75,6 +75,7 @@ set wrap "Wrapping lines
 "set t_te= "do not clear on vim close
 set number "line numbers
 set mouse=a "mouse integration
+set showcmd "Show partial commands
 set hlsearch "highlights search result. use :C to clear
 set modeline "see http://vim.wikia.com/wiki/Modeline_magic
 set smartcase "search insensitive if no uppercase letters appear in the search pattern
@@ -85,6 +86,7 @@ set ignorecase "default for smartcase
 set ffs=unix,dos "fileformat for CLRF madness
 set scrolloff=7 "Always keep at least some lines of visible context around cursor
 set shiftwidth=3 "colum to reindent on reindent command
+set wildmode=longest,list "Show list of completion in modeline while typing command
 set colorcolumn=80 "Mark the 80th character
 set timeoutlen=500
 "set listchars=tab:\│· "Prints tabs as │···
@@ -157,6 +159,12 @@ set statusline=%<\ %n:%f\ %m%r%y%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
 "   %) end of width specification
 "}}}
 
+" Quicker window movement
+nnoremap <M-j> <C-w>j
+nnoremap <M-k> <C-w>k
+nnoremap <M-h> <C-w>h
+nnoremap <M-l> <C-w>l
+
 "Syntax highlight correction for nmap script engine
 "autocmd BufRead,BufNewFile *.nse set filetype=lua
 
@@ -217,10 +225,10 @@ function! ToggleWrap()
 endfunction
 
 "Break bad habits
-"noremap <Up> <NOP>
-"noremap <Down> <NOP>
-"noremap <Left> <NOP>
-"noremap <Right> <NOP>
+nnoremap <Left> :echoe "Use h"<CR>
+nnoremap <Right> :echoe "Use l"<CR>
+nnoremap <Up> :echoe "Use k"<CR>
+nnoremap <Down> :echoe "Use j"<CR>
 
 "Move on buffer in wrapping mode{{{
 "noremap <silent> <Leader>w :call ToggleWrap()<CR>
@@ -260,6 +268,14 @@ endfunction
 "endfunction
 "call Wrap()
 "}}}
+
+" When editing a file, always jump to the last known cursor position.
+" Don't do it for commit messages, when the position is invalid, or when
+" inside an event handler (happens when dropping a file on gvim).
+autocmd BufReadPost *
+\ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
+\   exe "normal g`\"" |
+\ endif
 
 "Sorround with " or ' the current word
 noremap <leader>" bi"<esc>ea"

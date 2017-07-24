@@ -33,7 +33,7 @@ xkb_symbols "basic" {
 	key <AD10> {[ p, P, Greek_pi ]};
 	key <AC01> {[ a, A, agrave, leftarrow ]};
 	key <AC02> {[ s, S, downarrow ]};
-	key <AC03> {[ d, D, rightarrow ]};
+	key <AC03> {[ d, D, rightarrow, rightarrow ]};
 	key <AC04> {[ f, F ]};
 	key <AC05> {[ g, G ]};
 	key <AC06> {[ h, H ]};
@@ -72,6 +72,8 @@ xkb_symbols "basic" {
 	// Disable Escape to stop stretching. Painful but necessary.
 	key <ESC>  {[ VoidSymbol ]};
 
+        // Make shift+space behave as Return
+        key <SPCE> {[ space, Return ] };
 
 	// Switch with right alt
 	include "level3(ralt_switch)"
