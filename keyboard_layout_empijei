@@ -73,7 +73,7 @@ xkb_symbols "basic" {
 	key <ESC>  {[ VoidSymbol ]};
 
         // Make shift+space behave as Return
-        key <SPCE> {[ space, Return ] };
+        // key <SPCE> {[ space, Return ] };
 
 	// Switch with right alt
 	include "level3(ralt_switch)"

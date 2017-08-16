@@ -168,6 +168,13 @@ nnoremap <M-l> <C-w>l
 "Syntax highlight correction for nmap script engine
 "autocmd BufRead,BufNewFile *.nse set filetype=lua
 
+autocmd BufRead,BufNewFile *.hql set filetype=sql
+
+autocmd BufRead *.png :! xdg-open '%'
+autocmd BufRead *.gif :! xdg-open '%'
+autocmd BufRead *.jpg :! xdg-open '%'
+autocmd BufRead *.jpeg :! xdg-open '%'
+
 "Functions to insert time of the day {{{
 nnoremap <F7> "=strftime("%c")<CR>P
 inoremap <F7> <C-R>=strftime("%c")<CR>
@@ -282,12 +289,10 @@ noremap <leader>" bi"<esc>ea"
 noremap <leader>' bi'<esc>ea'
 
 "Xml beautifier
-autocmd FileType xml inoremap <c-f> <Esc>:silent %!xmllint --format --recover - <CR>i
-autocmd FileType xml nnoremap <c-f> :silent %!xmllint --format --recover - <CR>
+autocmd FileType xml command! Beautify :silent %!xmllint --format --recover - <CR>
 
 "JSON formatter
-autocmd FileType json inoremap <c-f> <Esc>:silent %! jq -M -r .<CR>i
-autocmd FileType json nnoremap <c-f> :silent %! jq -M -r .<CR>
+autocmd FileType json command! Beautify :silent %! jq -M -r .<CR>
 
 "Common typos fixes for impaired people like me{{{
 iabbrev epr per
@@ -327,54 +332,66 @@ command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude tags --exclude \
 " shift-control-* Greps for the word under the cursor
 nnoremap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 
+" Yank current file:line as if it was a grep -nl output
+nnoremap <leader>y :let @+=expand("%") . ':' . line(".") . ':' . getline(".")<CR>
+
+" Syntax highlight for xaml
+autocmd BufRead,BufNewFile *.xaml set filetype=xml
+
 "PLUGINS {{{
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim' "Plugin manager
-Plugin 'Valloric/YouCompleteMe' "Completer for most langauges
-Plugin 'tpope/vim-dispatch' "Spawn processes in background
-Plugin 'ervandew/supertab' "Tab completion
 Plugin 'majutsushi/tagbar' "Ctags panel integration
-Plugin 'scrooloose/nerdcommenter' "Commenter for most langauges
-Plugin 'scrooloose/nerdtree' "File browser left panel
-Plugin 'Xuyuanp/nerdtree-git-plugin' "Addon for nerdtree to support git tags
 Plugin 'KabbAmine/zeavim.vim' "Integration with Zeal
-"Plugin 'jiangmiao/auto-pairs' "Autoclose parens and alikes
 Plugin 'bogado/file-line' "interpret file:line:column as it should 
 Plugin 'jceb/vim-editqf' "Increase qf functionalities
+
+"Nerdtree
+Plugin 'scrooloose/nerdtree' "File browser left panel
+Plugin 'ryanoasis/vim-devicons' "Icons for filetypes, this requires a nerdfont
 
 "Eyecandy
 if has('gui_running')
 	Plugin 'altercation/vim-colors-solarized' "Theme
 endif
-Plugin 'ryanoasis/vim-devicons' "Icons for filetypes, this requires a nerdfont
-Plugin 'tiagofumo/vim-nerdtree-syntax-highlight' "colored icons for nerdtree
 
-"various langauges syntax highlight, completion, advanced browsing
-"MarkDown
-Plugin 'plasticboy/vim-markdown'
-Plugin 'shime/vim-livedown'
-Plugin 'godlygeek/tabular'
+if !empty($CODE_INSPECT)
+	"Code inspection
+	Plugin 'maksimr/vim-jsbeautify' "JS Beautifier
+	Plugin 'OmniSharp/omnisharp-vim' "Csharp
+	Plugin 'keith/swift.vim' "Swift
+	Plugin 'kchmck/vim-coffee-script' "Coffee Script
+	Plugin 'leafgarland/typescript-vim' "TypeScript
+	Plugin 'PProvost/vim-ps1' "powershell
+	"Makes it easier to preview from nerdtree
+	nmap S jgo
+	set colorcolumn=
+else
+	Plugin 'tpope/vim-dispatch' "Spawn processes in background
+	Plugin 'Valloric/YouCompleteMe' "Completer for most langauges
+	Plugin 'ervandew/supertab' "Tab completion
+	Plugin 'Xuyuanp/nerdtree-git-plugin' "Addon for nerdtree to support git tags
+	"Plugin 'tiagofumo/vim-nerdtree-syntax-highlight' "colored icons for nerdtree
+	Plugin 'fatih/vim-go' "Golang
+	Plugin 'scrooloose/nerdcommenter' "Commenter for most langauges
+	"Languages I use
+	"Plugin 'davidhalter/jedi-vim' "Python
+	"Plugin 'vim-scripts/Nmap-syntax-highlight' "Nse
 
-"Languages I use
-Plugin 'fatih/vim-go' "Golang
-"Plugin 'davidhalter/jedi-vim' "Python
-"Plugin 'vim-scripts/Nmap-syntax-highlight' "Nse
-Plugin 'OmniSharp/omnisharp-vim' "Csharp
-
-"JS and HTML stuff
-"Plugin 'pangloss/vim-javascript' "JS syntax highlighting and improved indentation
-"Plugin 'othree/html5-syntax.vim' "HTML5 syntax improvement
-"Plugin 'othree/html5.vim' "HTML5 autocompletion
-"Plugin 'othree/javascript-libraries-syntax.vim' "Syntax highlight for the most used JS libraries
-"Plugin 'othree/csscomplete.vim' "Enhanced CSS completion
-
-"Code inspection
-Plugin 'maksimr/vim-jsbeautify' "JS Beautifier
-"Plugin 'keith/swift.vim' "Swift
-"Plugin 'kchmck/vim-coffee-script' "Coffee Script
-"Plugin 'leafgarland/typescript-vim' "TypeScript
+	"JS and HTML stuff
+	"Plugin 'pangloss/vim-javascript' "JS syntax highlighting and improved indentation
+	"Plugin 'othree/html5-syntax.vim' "HTML5 syntax improvement
+	"Plugin 'othree/html5.vim' "HTML5 autocompletion
+	"Plugin 'othree/javascript-libraries-syntax.vim' "Syntax highlight for the most used JS libraries
+	"Plugin 'othree/csscomplete.vim' "Enhanced CSS completion
+	
+	"MarkDown
+	Plugin 'plasticboy/vim-markdown'
+	Plugin 'shime/vim-livedown'
+	Plugin 'godlygeek/tabular'
+endif
 
 "My stuff
 Plugin 'empijei/empijei-vim'
@@ -400,8 +417,7 @@ endif
 map <C-n> :NERDTreeToggle<CR>
 
 "JsBeautify
-autocmd FileType javascript inoremap <c-f> <Esc>:call JsBeautify()<CR>i
-autocmd FileType javascript nnoremap <c-f> :call JsBeautify()<CR>
+autocmd FileType javascript command! Beautify :call JsBeautify()<CR>
 
 "SuperTab
 let g:SuperTabDefaultCompletionType = "<c-n>"
@@ -476,7 +492,7 @@ augroup golang
 augroup END
 
 "Timeout in seconds to wait for a response from the server
-let g:OmniSharp_timeout = 5
+let g:OmniSharp_timeout = 50
 " this setting controls how long to wait (in ms) before fetching type / symbol information.
 set updatetime=500
 "This is the default value, setting it isn't actually necessary
@@ -514,9 +530,6 @@ augroup omnisharp_commands
 	autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
 
 augroup END
-
-"Antlr filetype
-au BufRead,BufNewFile *.g set syntax=antlr3
 
 augroup markdown_stuff
 	autocmd!

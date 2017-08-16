@@ -292,7 +292,7 @@ local rainbow = {
 					pownow = colorer(8,10,6," "..batvalues[1].. batvalues[5] .. "W")
 				end
 			end
-			return  colorer(50,20,batvalues[2]," BAT:%s%% " .. batvalues[3] , true).. pownow .. "|"
+			return  "|" .. colorer(50,20,batvalues[2],"BAT:%s%% " .. batvalues[3] , true).. pownow .. "|"
 		end
 		batwidget = wibox.widget.textbox()
 		vicious.register(batwidget, mypower , "$1",powersave and 3 or 1)
@@ -424,7 +424,7 @@ local rainbow = {
 		end
 		)
 
-		vicious.register(datewidget, vicious.widgets.date, powersave and "%b%d,%H:%M" or "%b%d,%H:%M:%S", powersave and 30 or 1)
+		vicious.register(datewidget, vicious.widgets.date, powersave and "%b%d,%H:%M|" or "%b%d,%H:%M:%S|", powersave and 30 or 1)
 
 		--local function foo()
 		--return ""
@@ -540,10 +540,8 @@ local rainbow = {
 			{ -- Right widgets
 			layout = wibox.layout.fixed.horizontal,
 			--mykeyboardlayout,
-			wibox.widget.systray(),
 			--mytextclock,
 			aweclientwidget,
-			foowidget,
 			batwidget,
 			cpuwidget,
 			cputempwidget,
@@ -552,6 +550,8 @@ local rainbow = {
 			diowidget,
 			netwidget,
 			datewidget,
+			foowidget,
+			wibox.widget.systray(),
 			--s.mylayoutbox,
 		},
 	}
@@ -686,7 +686,21 @@ function ()
 
 --
 --TODO
-awful.key({ modkey,           }, "x",     function () awful.spawn("echo -n '<img src=a onerror=alert(document.domain)>' | xclip -selection c",true) end,{description = "Put sample XSS payload in clipboard", group = "system"}),
+awful.key({ modkey }, "x",    
+function ()
+    awful.prompt.run {
+        prompt       = 'Paste snippet: ',
+        text         = '',
+		  textbox      = mouse.screen.mypromptbox.widget,
+        exe_callback = function(input)
+            if not input or #input == 0 then return end
+				awful.spawn('payloads ' .. input)
+        end
+    }
+ end,
+{description = "Paste snippet",group="tag"}),
+
+
 
 awful.key({ modkey,           }, ".",     
 function () awful.spawn("bash -c 'playerctl pause; xscreensaver-command -lock||slock'",false) end,
