@@ -88,6 +88,8 @@ set scrolloff=7 "Always keep at least some lines of visible context around curso
 set shiftwidth=3 "colum to reindent on reindent command
 set wildmode=longest,list "Show list of completion in modeline while typing command
 set colorcolumn=80 "Mark the 80th character
+set undofile "tell vim to use an undo file
+set undodir=~/.vim/undo/ "tell vim where to look for undo files
 set timeoutlen=500
 "set listchars=tab:\│· "Prints tabs as │···
 "set ttymouse=xterm2 "tmux compatibility
@@ -203,13 +205,16 @@ inoremap <c-j> <Esc>:m .+1<CR>==gi
 inoremap <c-k> <Esc>:m .-2<CR>==gi
 "}}}
 
+"Colors {{{
 colorscheme default
 highlight ColorColumn ctermbg=blue
-highlight Search cterm=NONE ctermbg=yellow ctermfg=black
+highlight Search cterm=NONE ctermbg=green ctermfg=black
 highlight Visual cterm=NONE ctermbg=yellow ctermfg=black
 highlight SpellBad cterm=NONE ctermfg=black ctermbg=red 
 highlight SpellCap cterm=NONE ctermfg=white ctermbg=blue 
-"
+highlight MatchParen cterm=NONE ctermbg=black ctermfg=yellow
+"highlight MatchParen term=underline cterm=underline gui=underline
+"}}}
 
 " Vimscript {{{
 "augroup filetype_vim
@@ -352,6 +357,8 @@ Plugin 'jceb/vim-editqf' "Increase qf functionalities
 Plugin 'scrooloose/nerdtree' "File browser left panel
 Plugin 'ryanoasis/vim-devicons' "Icons for filetypes, this requires a nerdfont
 
+Plugin 'kien/ctrlp.vim'
+
 "Eyecandy
 if has('gui_running')
 	Plugin 'altercation/vim-colors-solarized' "Theme
@@ -475,21 +482,6 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS noci
 "}}}
 
 " FileType stuff {{{
-augroup golang
-	autocmd!
-	"Show a list of interfaces which is implemented by the type under your cursor with \s
-	autocmd FileType go nmap <Leader>s <Plug>(go-implements)
-	autocmd FileType go nmap <Leader>e :GoErrCheck<CR>
-	autocmd FileType go nmap gr :GoReferrers<CR>
-	autocmd FileType go nmap <Leader>r <Plug>(go-rename) 
-	autocmd FileType go nmap <F5> <Plug>(go-run)
-	autocmd FileType go nmap <leader>b <Plug>(go-build)
-	"autocmd FileType go nmap <leader>t <Plug>(go-test)
-	autocmd FileType go nmap <leader>t :GoCoverageToggle<CR>
-	autocmd FileType go nmap <leader>a :GoAlternate<CR>
-	autocmd FileType go nmap # <Plug>(go-def)
-	autocmd FileType go nmap Z <Plug>Zeavim
-augroup END
 
 "Timeout in seconds to wait for a response from the server
 let g:OmniSharp_timeout = 50
@@ -549,7 +541,7 @@ augroup END
 
 "Spellcheck for latex
 autocmd FileType tex set spell spelllang=it_it
-autocmd FileType tex set colorcolumn=0
+autocmd FileType tex set colorcolumn=
 autocmd FileType tex inoremap <c-a> <Esc>[sz=i1<CR><CR>A
 autocmd FileType tex nnoremap zz [sz=i1<CR><CR>e
 autocmd FileType tex nnoremap Z [sz=i1<CR><CR>A
@@ -576,4 +568,23 @@ autocmd BufRead,BufNewFile *.ts set filetype=typescript
 
 "An underline is too invasive, let's just change the contrast
 hi CursorLine cterm=NONE ctermbg=black
+
+augroup golang
+	autocmd!
+	"Show a list of interfaces which is implemented by the type under your cursor with \s
+	autocmd FileType go nmap <Leader>s <Plug>(go-implements)
+	autocmd FileType go nmap <Leader>e :GoErrCheck<CR>
+	autocmd FileType go nmap gr :GoReferrers<CR>
+	autocmd FileType go nmap <Leader>r <Plug>(go-rename) 
+	autocmd FileType go nmap <F5> <Plug>(go-run)
+	autocmd FileType go nmap <leader>b <Plug>(go-build)
+	"autocmd FileType go nmap <leader>t <Plug>(go-test)
+	autocmd FileType go nmap <leader>t :GoCoverageToggle<CR>
+	autocmd FileType go nmap <leader>a :GoAlternate<CR>
+	autocmd FileType go nmap # <Plug>(go-def)
+	autocmd FileType go nmap Z <Plug>Zeavim
+	autocmd FileType go iabbrev iin  := range 
+	autocmd FileType go iabbrev !! if err != nil { 
+augroup END
+
 "}}}
