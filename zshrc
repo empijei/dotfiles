@@ -9,7 +9,6 @@ source ~/empijei/zshproject/sourcer.sourceme
 source ~/empijei/zshproject/channels.sourceme
 source ~/empijei/ctfconsole/sourceme
 source "$HOME/Reinstall/arch/maintenance/maintenance.sh"
-export PATH="$PATH:$HOME/external_packages/github.com/rapid7/metasploit-framework/docker/bin"
 export PASSWORD_STORE_DIR="$HOME/empijei/pass"
 export PASSWORD_STORE_GIT="$HOME/empijei/pass"
 export EXTERNAL_PACKAGES="$HOME/external_packages"
@@ -19,3 +18,6 @@ export EXTERNAL_PACKAGES="$HOME/external_packages"
 alias nessus="vboxmanage startvm PTBox1604 --type headless && sleep 15 && ssh pentester@PTBox.local"
 #alias maintenance="zsh $HOME/Reinstall/arch/maintenance/maintenance.sh"
 alias erica="shuf -n 1 ~/Dropbox/note/lista-nomi-femminili.txt | tr -d '\n' | tee >(xclip -selection c)"
+dock-msf(){
+	export PATH="$HOME/external_packages/github.com/rapid7/metasploit-framework/docker/bin:$PATH"
+}

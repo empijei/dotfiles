@@ -189,6 +189,7 @@ inoremap <F6> <C-R>=strftime("%d/%m/%Y")<CR>
 "stty -ixon
 "in your bashrc file or this will not work
 inoremap <c-s> <esc>:w<CR>a
+nnoremap <c-s> :w<CR>
 "}}}
 
 "Git commits should be 50 chars long
@@ -333,7 +334,7 @@ iabbrev sssig -- <cr> Empijei <cr> empijei@gmail.com
 nnoremap gtd <C-]>
 
 "Call grep from Vim. I know there is :vimgrep, but it is too slow.
-command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude tags --exclude \*.cf . -e <args>' | copen | execute 'silent /<args>' | redraw!
+command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude-dir=.git --exclude tags --exclude \*.cf . -e <args>' | copen | execute 'silent /<args>' | redraw!
 " shift-control-* Greps for the word under the cursor
 nnoremap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 
@@ -388,11 +389,11 @@ else
 	"Plugin 'vim-scripts/Nmap-syntax-highlight' "Nse
 
 	"JS and HTML stuff
-	"Plugin 'pangloss/vim-javascript' "JS syntax highlighting and improved indentation
-	"Plugin 'othree/html5-syntax.vim' "HTML5 syntax improvement
-	"Plugin 'othree/html5.vim' "HTML5 autocompletion
-	"Plugin 'othree/javascript-libraries-syntax.vim' "Syntax highlight for the most used JS libraries
-	"Plugin 'othree/csscomplete.vim' "Enhanced CSS completion
+	Plugin 'pangloss/vim-javascript' "JS syntax highlighting and improved indentation
+	Plugin 'othree/html5-syntax.vim' "HTML5 syntax improvement
+	Plugin 'othree/html5.vim' "HTML5 autocompletion
+	Plugin 'othree/javascript-libraries-syntax.vim' "Syntax highlight for the most used JS libraries
+	Plugin 'othree/csscomplete.vim' "Enhanced CSS completion
 	
 	"MarkDown
 	Plugin 'plasticboy/vim-markdown'
@@ -530,8 +531,8 @@ augroup markdown_stuff
 	autocmd FileType markdown noremap <leader>_ bi_<esc>ea_
 	autocmd FileType markdown noremap <leader>* bi*<esc>ea*
 	autocmd FileType markdown noremap <leader>- bi__<esc>ea__
-	autocmd FileType markdown inoremap <C-b> __
-	autocmd FileType markdown inoremap <C-i> _
+	"autocmd FileType markdown inoremap <C-b> __
+	"autocmd FileType markdown inoremap <C-i> _
 	autocmd FileType markdown set colorcolumn=
 	autocmd FileType markdown inoremap <c-a> <Esc>[sz=i1<CR><CR>A
 	autocmd FileType markdow nnoremap zz [sz=i1<CR><CR>e
@@ -571,6 +572,7 @@ hi CursorLine cterm=NONE ctermbg=black
 
 augroup golang
 	autocmd!
+	let g:go_autodetect_gopath=0
 	"Show a list of interfaces which is implemented by the type under your cursor with \s
 	autocmd FileType go nmap <Leader>s <Plug>(go-implements)
 	autocmd FileType go nmap <Leader>e :GoErrCheck<CR>

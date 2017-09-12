@@ -72,6 +72,10 @@ xkb_symbols "basic" {
 	// Disable Escape to stop stretching. Painful but necessary.
 	key <ESC>  {[ VoidSymbol ]};
 
+	// My Keyboard has PGUP and PGDOWN too close to arrows.
+	key <PGUP>  {[ VoidSymbol ]};
+	key <PGDN>  {[ VoidSymbol ]};
+
         // Make shift+space behave as Return
         // key <SPCE> {[ space, Return ] };
 
