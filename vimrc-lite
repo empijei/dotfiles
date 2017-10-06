@@ -41,7 +41,7 @@ nnoremap cp :cp<CR>
 set list "shows invisible characters
 set wrap "Wrapping lines
 set number "line numbers
-set mouse=a "mouse integration
+set wildmenu "show commands in statusline
 set hlsearch "highlights search result. use :C to clear
 set modeline "see http://vim.wikia.com/wiki/Modeline_magic
 set smartcase "search insensitive if no uppercase letters appear in the search pattern
@@ -51,8 +51,8 @@ set ignorecase "default for smartcase
 set ffs=unix,dos "fileformat for CLRF madness
 set shiftwidth=3 "colum to reindent on reindent command
 set colorcolumn=80 "Mark the 80th character
-"set listchars=tab:\│· "Prints tabs as │···
 set listchars=tab:\·\  "Prints tabs as │···
+set wildmode=longest,full "Show list of completion in modeline while typing command
 set fillchars+=vert:\ "removes pipe marker in split
 set clipboard=unnamedplus "System clipboard integration
 set omnifunc=syntaxcomplete#Complete "http://vim.wikia.com/wiki/Omni_completion

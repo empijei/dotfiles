@@ -40,6 +40,7 @@ command! Reconf source $HOME/.vimrc
 
 "delete empty lines
 command! Strip g/^\s*$/d
+command! StripEnding :%s/\s\+$//e
 
 "Toggle between vimdiff and vim
 command! Diff windo diffthis | syntax off
@@ -77,6 +78,7 @@ set number "line numbers
 set mouse=a "mouse integration
 set showcmd "Show partial commands
 set hlsearch "highlights search result. use :C to clear
+set wildmenu "show commands in statusline
 set modeline "see http://vim.wikia.com/wiki/Modeline_magic
 set smartcase "search insensitive if no uppercase letters appear in the search pattern
 set incsearch "move while searching
@@ -86,7 +88,7 @@ set ignorecase "default for smartcase
 set ffs=unix,dos "fileformat for CLRF madness
 set scrolloff=7 "Always keep at least some lines of visible context around cursor
 set shiftwidth=3 "colum to reindent on reindent command
-set wildmode=longest,list "Show list of completion in modeline while typing command
+set wildmode=longest,full "Show list of completion in modeline while typing command
 set colorcolumn=80 "Mark the 80th character
 set undofile "tell vim to use an undo file
 set undodir=~/.vim/undo/ "tell vim where to look for undo files
@@ -117,7 +119,7 @@ au InsertEnter * set nocursorline "do not underline current line in insert mode
 au InsertLeave * set cursorline "underline current line in other modes
 
 "statusline {{{
-set laststatus=2 
+set laststatus=2
 set ttimeoutlen=50
 function! InsertStatuslineColor(mode)
 	" 0 = Dark Gray
@@ -131,7 +133,7 @@ function! InsertStatuslineColor(mode)
 	if a:mode == 'i'
 		hi StatusLine term=reverse ctermbg=16 ctermfg=7
 	elseif a:mode == 'r'
-		hi StatusLine term=reverse ctermbg=16 ctermfg=1 
+		hi StatusLine term=reverse ctermbg=16 ctermfg=1
 	else
 		hi StatusLine term=reverse ctermbg=16 ctermfg=7
 	endif
@@ -185,7 +187,7 @@ inoremap <F6> <C-R>=strftime("%d/%m/%Y")<CR>
 "}}}
 
 "Ctrl-s to save {{{
-"WARNING: you have to put 
+"WARNING: you have to put
 "stty -ixon
 "in your bashrc file or this will not work
 inoremap <c-s> <esc>:w<CR>a
@@ -193,7 +195,7 @@ nnoremap <c-s> :w<CR>
 "}}}
 
 "Git commits should be 50 chars long
-autocmd FileType gitcommit set colorcolumn=50 
+autocmd FileType gitcommit set colorcolumn=50
 
 "move lines on Ctrl+Arrows{{{
 "nnoremap <c-Down> :m .+1<CR>==
@@ -211,9 +213,11 @@ colorscheme default
 highlight ColorColumn ctermbg=blue
 highlight Search cterm=NONE ctermbg=green ctermfg=black
 highlight Visual cterm=NONE ctermbg=yellow ctermfg=black
-highlight SpellBad cterm=NONE ctermfg=black ctermbg=red 
-highlight SpellCap cterm=NONE ctermfg=white ctermbg=blue 
+highlight SpellBad cterm=NONE ctermfg=black ctermbg=red
+highlight SpellCap cterm=NONE ctermfg=white ctermbg=blue
 highlight MatchParen cterm=NONE ctermbg=black ctermfg=yellow
+highlight ExtraWhitespace ctermbg=red
+match ExtraWhitespace /\s\+$/
 "highlight MatchParen term=underline cterm=underline gui=underline
 "}}}
 
@@ -450,7 +454,7 @@ command! -nargs=? -complete=file QS :call editqf#Save("!", "qf", <f-args>)
 "endif
 
 "vim-livedown
-let g:livedown_autorun = 1
+let g:livedown_autorun = 0
 let g:livedown_open = 1
 let g:livedown_port = 1337
 let g:livedown_browser = "chromium"
