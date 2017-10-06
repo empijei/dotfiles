@@ -141,6 +141,12 @@ return {
 }
 end
 
+function metawrap(func)
+		local funcTable = {}
+		setmetatable(funcTable, { __call = function(_, ...) return func(...) end })
+		return funcTable
+end
+
 
 -- {{{ THIS IS FOR DEBUG PURPOSES:
 function print_r ( t )  
@@ -261,12 +267,13 @@ local rainbow = {
 		end
 
 		batwid = vicious.widgets.bat
-		powersave = batwid("","BAT0")[1] == "−" 
+		--powersave = batwid("","BAT0")[1] == "−" 
+		powersave = batwid("","BAT0")[1] == "-" 
 		--powersave = false
 		alerted = false
 		local function mypower()
 			batvalues=batwid("","BAT0")
-			if batvalues[1] == "−" and batvalues[2] < 7 and not alerted then
+			if batvalues[1] == "-" and batvalues[2] < 7 and not alerted then
 				alerted = true
 				naughty.notify({ preset = naughty.config.presets.critical,
 				title = "Battery state low",
@@ -274,7 +281,7 @@ local rainbow = {
 			end
 			local pownow = "" 
 			--naughty.notify({title = "Debug",text = batvalues[1]})
-			if batvalues[1] == "−" then
+			if batvalues[1] == "-" then
 				if not powersave then
 					awful.spawn("powersave ON",false)
 					awesome.restart()
@@ -295,7 +302,7 @@ local rainbow = {
 			return  "|" .. colorer(50,20,batvalues[2],"BAT:%s%% " .. batvalues[3] , true).. pownow .. "|"
 		end
 		batwidget = wibox.widget.textbox()
-		vicious.register(batwidget, mypower , "$1",powersave and 3 or 1)
+		vicious.register(batwidget, metawrap(mypower) , "$1",powersave and 3 or 1)
 		batwidget = onlyonmain(batwidget)
 
 
@@ -324,7 +331,7 @@ local rainbow = {
 		end
 		)
 
-		vicious.register(memwidget, mymem, "$1", powersave and 13 or 1)
+		vicious.register(memwidget, metawrap(mymem), "$1", powersave and 13 or 1)
 		memwidget=onlyonmain(memwidget)
 
 		cpuwid =vicious.widgets.cpu
@@ -347,7 +354,7 @@ local rainbow = {
 			awesome.spawn("tasklist CPU",false)
 		end
 		)
-		vicious.register(cpuwidget, mycpu, "$1",powersave and 7 or 1)
+		vicious.register(cpuwidget, metawrap(mycpu), "$1",powersave and 7 or 1)
 		cpuwidget=onlyonmain(cpuwidget)
 
 		thermwid = vicious.widgets.thermal
@@ -359,7 +366,7 @@ local rainbow = {
 			return colorer(65,75,thermal,"%s°C")..'|'
 		end
 		cputempwidget = wibox.widget.textbox()
-		vicious.register(cputempwidget, mytemp, "$1", powersave and 0 or 4)
+		vicious.register(cputempwidget, metawrap(mytemp), "$1", powersave and 0 or 4)
 		cputempwidget=onlyonmain(cputempwidget)
 
 		hddwid = vicious.widgets.fs
@@ -369,7 +376,7 @@ local rainbow = {
 		end
 
 		hddwidget = wibox.widget.textbox()
-		vicious.register(hddwidget, myhdd, "HDD:${/ avail_gb}GB ", powersave and 0 or  13)
+		vicious.register(hddwidget, metawrap(myhdd), "HDD:${/ avail_gb}GB ", powersave and 0 or  13)
 		hddwidget=onlyonmain(hddwidget)
 
 		diowid = vicious.widgets.dio
@@ -381,7 +388,7 @@ local rainbow = {
 			return colorer(70,100,tonumber(mbps),'R+W:%sMBps')..'|'
 		end
 		diowidget = wibox.widget.textbox()
-		vicious.register(diowidget,mydio, "$1",powersave and 0 or 1)
+		vicious.register(diowidget, metawrap(mydio), "$1",powersave and 0 or 1)
 		diowidget=onlyonmain(diowidget)
 
 		local function mynet()
@@ -413,7 +420,7 @@ local rainbow = {
 			return '<span color="#3399ff">NET:'..up..'↑ '..down .. '↓</span>|'
 		end
 		netwidget = wibox.widget.textbox()
-		vicious.register(netwidget,mynet,"",powersave and 0 or 1)
+		vicious.register(netwidget, metawrap(mynet),"",powersave and 0 or 1)
 		netwidget=onlyonmain(netwidget)
 
 		datewidget = wibox.widget.textbox()
