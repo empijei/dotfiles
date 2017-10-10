@@ -1,6 +1,7 @@
-[submodule "awesome/vicious"]
-	path = awesome/vicious
-	url = git@github.com:empijei/vicious.git
 [submodule "zshproject"]
 	path = zshproject
 	url = git@github.com:empijei/zshproject.git
+[submodule "awesome/--force"]
+	path = awesome/--force
+	url = https://github.com/Mic92/vicious.git
+	branch = master

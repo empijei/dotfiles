@@ -11,6 +11,8 @@
 "	git submodule update --init --recursive
 "	cd server
 "	xbuild
+"
+"  pip install --user powerline-status
 
 set nocompatible  "Be IMproved
 syntax on
@@ -121,47 +123,48 @@ au InsertLeave * set cursorline "underline current line in other modes
 "statusline {{{
 set laststatus=2
 set ttimeoutlen=50
-function! InsertStatuslineColor(mode)
-	" 0 = Dark Gray
-	" 1 = Red
-	" 2 = Lime
-	" 3 = Yellow
-	" 4 = Cyan
-	" 5 = Pink
-	" 6 = Aquamarine
-	" 7 = White
-	if a:mode == 'i'
-		hi StatusLine term=reverse ctermbg=16 ctermfg=7
-	elseif a:mode == 'r'
-		hi StatusLine term=reverse ctermbg=16 ctermfg=1
-	else
-		hi StatusLine term=reverse ctermbg=16 ctermfg=7
-	endif
-endfunction
-
-au InsertEnter * call InsertStatuslineColor(v:insertmode)
-au InsertChange * call InsertStatuslineColor(v:insertmode)
-au InsertLeave * hi StatusLine term=reverse ctermbg=16 ctermfg=2
-hi StatusLine term=reverse ctermbg=16 ctermfg=2
-set statusline=%<\ %n:%f\ %m%r%y%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
-" statusline
-" cf the default statusline: %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-" format markers:
-"   %< truncation point
-"   %n buffer number
-"   %f relative path to file
-"   %m modified flag [+] (modified), [-] (unmodifiable) or nothing
-"   %r readonly flag [RO]
-"   %y filetype [ruby]
-"   %= split point for left and right justification
-"   %-35. width specification
-"   %l current line number
-"   %L number of lines in buffer
-"   %c current column number
-"   %V current virtual column number (-n), if different from %c
-"   %P percentage through buffer
-"   %) end of width specification
-"}}}
+" commented out since vim-powerline adoption
+"function! InsertStatuslineColor(mode)
+"	" 0 = Dark Gray
+"	" 1 = Red
+"	" 2 = Lime
+"	" 3 = Yellow
+"	" 4 = Cyan
+"	" 5 = Pink
+"	" 6 = Aquamarine
+"	" 7 = White
+"	if a:mode == 'i'
+"		hi StatusLine term=reverse ctermbg=16 ctermfg=7
+"	elseif a:mode == 'r'
+"		hi StatusLine term=reverse ctermbg=16 ctermfg=1
+"	else
+"		hi StatusLine term=reverse ctermbg=16 ctermfg=7
+"	endif
+"endfunction
+"
+"au InsertEnter * call InsertStatuslineColor(v:insertmode)
+"au InsertChange * call InsertStatuslineColor(v:insertmode)
+"au InsertLeave * hi StatusLine term=reverse ctermbg=16 ctermfg=2
+"hi StatusLine term=reverse ctermbg=16 ctermfg=2
+"set statusline=%<\ %n:%f\ %m%r%y%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
+"" statusline
+"" cf the default statusline: %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+"" format markers:
+""   %< truncation point
+""   %n buffer number
+""   %f relative path to file
+""   %m modified flag [+] (modified), [-] (unmodifiable) or nothing
+""   %r readonly flag [RO]
+""   %y filetype [ruby]
+""   %= split point for left and right justification
+""   %-35. width specification
+""   %l current line number
+""   %L number of lines in buffer
+""   %c current column number
+""   %V current virtual column number (-n), if different from %c
+""   %P percentage through buffer
+""   %) end of width specification
+""}}}
 
 " Quicker window movement
 nnoremap <M-j> <C-w>j
@@ -208,24 +211,11 @@ inoremap <c-j> <Esc>:m .+1<CR>==gi
 inoremap <c-k> <Esc>:m .-2<CR>==gi
 "}}}
 
-"Colors {{{
-colorscheme default
-highlight ColorColumn ctermbg=blue
-highlight Search cterm=NONE ctermbg=green ctermfg=black
-highlight Visual cterm=NONE ctermbg=yellow ctermfg=black
-highlight SpellBad cterm=NONE ctermfg=black ctermbg=red
-highlight SpellCap cterm=NONE ctermfg=white ctermbg=blue
-highlight MatchParen cterm=NONE ctermbg=black ctermfg=yellow
-highlight ExtraWhitespace ctermbg=red
-match ExtraWhitespace /\s\+$/
-"highlight MatchParen term=underline cterm=underline gui=underline
-"}}}
-
 " Vimscript {{{
 "augroup filetype_vim
-	"autocmd!
-	"this allows folding in vimscript
-	"autocmd FileType vim setlocal foldmethod=marker
+"autocmd!
+"this allows folding in vimscript
+"autocmd FileType vim setlocal foldmethod=marker
 "augroup END
 "}}}
 
@@ -290,9 +280,9 @@ nnoremap <Down> :echoe "Use j"<CR>
 " Don't do it for commit messages, when the position is invalid, or when
 " inside an event handler (happens when dropping a file on gvim).
 autocmd BufReadPost *
-\ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
-\   exe "normal g`\"" |
-\ endif
+			\ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
+			\   exe "normal g`\"" |
+			\ endif
 
 "Sorround with " or ' the current word
 noremap <leader>" bi"<esc>ea"
@@ -363,11 +353,18 @@ Plugin 'scrooloose/nerdtree' "File browser left panel
 Plugin 'ryanoasis/vim-devicons' "Icons for filetypes, this requires a nerdfont
 
 Plugin 'kien/ctrlp.vim'
+Plugin 'powerline/powerline'
 
+"Colors {{{
 "Eyecandy
 if has('gui_running')
-	Plugin 'altercation/vim-colors-solarized' "Theme
+	Plugin 'tomasiser/vim-code-dark' "Dark code theme
+	"Plugin 'altercation/vim-colors-solarized' "Theme
 endif
+
+"highlight MatchParen term=underline cterm=underline gui=underline
+"}}}
+
 
 if !empty($CODE_INSPECT)
 	"Code inspection
@@ -398,7 +395,7 @@ else
 	Plugin 'othree/html5.vim' "HTML5 autocompletion
 	Plugin 'othree/javascript-libraries-syntax.vim' "Syntax highlight for the most used JS libraries
 	Plugin 'othree/csscomplete.vim' "Enhanced CSS completion
-	
+
 	"MarkDown
 	Plugin 'plasticboy/vim-markdown'
 	Plugin 'shime/vim-livedown'
@@ -417,17 +414,31 @@ let g:vim_markdown_folding_disabled = 1
 "Autopairs
 "let g:AutoPairsUseInsertedCount = 1
 
+"Powerline
+"this require installing it via pip with
+"pip install powerline-status
+set rtp+=$HOME/.vim/bundle/powerline/powerline/bindings/vim
+
 "Gvim is seriously ugly
 if has('gui_running')
-	set background=light
-	colorscheme solarized
-	set guifont=DejaVuSansMono\ Nerd\ Font\ Book\ 11
-endif 
-
+	"set guifont=Fira\ Code\ Medium\ 11
+	set guifont=DejaVuSansMono\ Fira\ Code\ Medium\ 11
+	"S-more eyecandy
+	colorscheme codedark
+else
+	set t_Co=256
+	set t_ut=
+	colorscheme empijei
+	highlight ExtraWhitespace ctermbg=red
+	"An underline is too invasive, let's just change the contrast
+	hi CursorLine cterm=NONE ctermbg=black
+endif
+match ExtraWhitespace /\s\+$/
 
 "NerdTree
 map <C-n> :NERDTreeToggle<CR>
 
+"O
 "JsBeautify
 autocmd FileType javascript command! Beautify :call JsBeautify()<CR>
 
@@ -436,9 +447,9 @@ let g:SuperTabDefaultCompletionType = "<c-n>"
 
 "Zeavim
 nmap Z <Plug>Zeavim
-vmap Z <Plug>ZVVisSelection   
-nmap gz <Plug>ZVMotion         
-nmap gZ <Plug>ZVKeyDocset      
+vmap Z <Plug>ZVVisSelection
+nmap gz <Plug>ZVMotion
+nmap gZ <Plug>ZVKeyDocset
 
 let g:zv_file_types = {
 			\	'cpp' : 'cpp',
@@ -504,7 +515,7 @@ augroup omnisharp_commands
 
 	"Set autocomplete function to OmniSharp (if not using YouCompleteMe completion plugin)
 	autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-	
+
 	" Remove 'Press Enter to continue' message when type information is longer than one line.
 	autocmd FileType cs set cmdheight=2
 
@@ -570,9 +581,6 @@ autocmd FileType cpp,objc,objcpp,python nnoremap gyd :YcmCompleter GoTo<CR>
 autocmd FileType python,typescript nnoremap gr :YcmCompleter GoToReferences<CR>
 
 autocmd BufRead,BufNewFile *.ts set filetype=typescript
-
-"An underline is too invasive, let's just change the contrast
-hi CursorLine cterm=NONE ctermbg=black
 
 augroup golang
 	autocmd!
