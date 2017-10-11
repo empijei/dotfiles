@@ -64,7 +64,7 @@ screen_delta=1
 modkey = "Mod4"
 
 -- Makes awesome ignore Num Lock
-awful.key.ignore_modifiers = { "Mod2" }
+--awful.key.ignore_modifiers = { "Mod2" }
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
@@ -233,6 +233,20 @@ function scandir(directory, filter)
 
 	end
 	return t
+end
+
+wp_index = 1
+wp_path = HOME .. "Reinstall/arch/wallpapers/"
+wp_files = scandir(wp_path)
+math.randomseed( os.time() )
+local function randomwp()
+	-- get next random index
+	wp_index = math.random( 1, #wp_files)
+
+	-- set wallpaper to current index for all screens
+	for s = 1, screen.count() do
+		gears.wallpaper.maximized(wp_path .. wp_files[wp_index], s, true)
+	end
 end
 
 -- }}}
@@ -442,53 +456,38 @@ end
 vicious.register(datewidget, metawrap(mydate), powersave and 30 or 1)
 
 -- this spawns a 3 processes every time it is called, so it is disabled until I find a better way to do so
---capswid =wibox.widget.textbox()
+--capswid = wibox.widget.textbox()
 --local function caps()
 --	local f = io.popen("xset -q | grep 'Caps Lock: *on'")
 --	local capsstatus = f:read("*all")
 --	f:close()
---	return capsstatus:len() > 0 and '<span color="#FF0000"></span>' or '<span color="#008000"></span>'
+--	--capswid.markup = capsstatus:len() > 0 and '<span color="#FF0000">CAPS IS ON </span>' or '<span color="#008000"></span>'
+--	capswid:set_markup(capsstatus)
+--	naughty.notify{ text = "Caps!" .. capsstatus }
 --end
---if not powersave then
---	vicious.register(capswid, metawrap(caps), 1)
---end
+--vicious.register(capswid, metawrap(caps), 1)
 
-foowidget = wibox.widget.textbox()
-foowidget:set_markup_silently(powersave and '<span color="#008000">🍂</span>' or '<span color="#FF5000">🔥</span>')
+--foowidget = wibox.widget.textbox()
+--foowidget:set_markup_silently(powersave and '<span color="#008000">🍂</span>' or '<span color="#FF5000">🔥</span>')
 --vicious.register(foowidget, foo, "$1",1)
-foowidget=onlyonmain(foowidget)
+--foowidget=onlyonmain(foowidget)
 
 -- }}}
 
 -- {{{ Wallpaper rotate
-wp_index = 1
-wp_timeout  = 60
-wp_path = HOME .. "Reinstall/arch/wallpapers/"
-wp_files = scandir(wp_path)
-
 -- setup the timer
+wp_timeout  = 300
 wp_timer = timer { timeout = wp_timeout }
-
 wp_timer:connect_signal("timeout", function()
-
-	-- set wallpaper to current index for all screens
-	for s = 1, screen.count() do
-		gears.wallpaper.maximized(wp_path .. wp_files[wp_index], s, true)
-	end
-
 	-- stop the timer (we don't need multiple instances running at the same time)
 	wp_timer:stop()
-
-	-- get next random index
-	wp_index = math.random( 1, #wp_files)
-
+	randomwp()
 	--restart the timer
 	wp_timer.timeout = wp_timeout
 	wp_timer:start()
 end)
-
--- initial start when rc.lua is first run
 if not powersave then
+	-- initial start when rc.lua is first run
 	wp_timer:start()
 end
 -- }}}
@@ -604,8 +603,8 @@ awful.screen.connect_for_each_screen(function(s)
 	diowidget,
 	netwidget,
 	datewidget,
-	--capswid,
-	foowidget,
+	capswid,
+	--foowidget,
 	wibox.widget.systray(),
 	--s.mylayoutbox,
 },
@@ -658,7 +657,6 @@ awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1, nil,
 awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true) end, {description = "decrease the number of columns", group = "layout"}),
 awful.key({ modkey,           }, "space", function () awful.layout.inc( 1) end, {description = "select next", group = "layout"}),
 awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1) end, {description = "select previous", group = "layout"}),
-awful.key({         "Lock"    }, "" ,     function () awful.spawn("bash -c 'playerctl pause; xscreensaver-command -lock||slock'",false) end, {description = "Locks the screen", group = "system"}),
 awful.key({ modkey,           }, ".",     function () awful.spawn("bash -c 'playerctl pause; xscreensaver-command -lock||slock'",false) end, {description = "Locks the screen", group = "system"}),
 awful.key({ modkey, "Shift"   }, "c",     function () awesome.spawn("tasklist CPU") end, {description = "Shows the top 5 CPU consuming processes", group = "system"}),
 awful.key({ modkey, "Shift"   }, "m",     function () awesome.spawn("tasklist MEM") end, {description = "Shows the top 5 MEMORY consuming processes", group = "system"}),
@@ -668,7 +666,7 @@ awful.key({ modkey            }, "Print", function () awful.spawn("crop-screensh
 awful.key({ modkey, "Shift"   }, "Print", function () awful.spawn("crop-screenshot OCR",false)  end,{description = "takes a screenshot with selection and uses an OCR to read the text inside the image", group = "screen"}),
 
 -- Top row and media managing
-awful.key({ modkey,           }, "F1",    function () awful.spawn("chromium ") end,{description = "Chromium", group = "system"}),
+awful.key({ modkey,           }, "F1",    function () awful.spawn("chromium") end,{description = "Chromium", group = "system"}),
 awful.key({ modkey, "Shift"   }, "F1",    function () awful.spawn("chromium --incognito") end,{description = "Incognito Chromium", group = "system"}),
 awful.key({ modkey,           }, "F2",    function () awful.spawn("pcmanfm") end,{description = "File manager", group = "launcher"}),
 awful.key({ modkey, "Shift"   }, "F2",    function () awful.spawn("pavucontrol") end,{description = "Volume Manager", group = "launcher"}),
@@ -1002,3 +1000,6 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+-- Shuffle the wallpaper. If on powersave this will only shuffle here and once
+randomwp()
