@@ -50,8 +50,9 @@ beautiful.init(awful.util.get_xdg_config_home().."awesome/themes/default/theme.l
 
 -- This is used later as the default terminal and editor to run.
 --alternative_terminal = "lxterminal"
-alternative_terminal = "terminator"
-terminal = "qterminal"
+alternative_terminal = "qterminal"
+--terminal = "qterminal"
+terminal = "terminator"
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 screen_delta=1
@@ -245,7 +246,10 @@ local function randomwp()
 
 	-- set wallpaper to current index for all screens
 	for s = 1, screen.count() do
-		gears.wallpaper.maximized(wp_path .. wp_files[wp_index], s, true)
+		--https://awesomewm.org/doc/api/libraries/gears.wallpaper.html
+		--gears.wallpaper.maximized(wp_path .. wp_files[wp_index], s, true)
+		--gears.wallpaper.fit(wp_path .. wp_files[wp_index], s)
+		gears.wallpaper.maximized(wp_path .. wp_files[wp_index], s, false)
 	end
 end
 
@@ -436,14 +440,14 @@ local function mynet()
 	else
 		down = down .. 'KBps'
 	end
-	return '<span color="#3399ff">NET:'..up..'↑ '..down .. '↓</span>│'
+	return '<span color="#3399ff">NET:' .. up .. '↑ ' .. down .. '↓</span>│'
 end
 netwidget = wibox.widget.textbox()
 vicious.register(netwidget, metawrap(mynet),"",powersave and 0 or 1)
 netwidget=onlyonmain(netwidget)
 
-datewidget = wibox.widget.textbox()
-datewidget:connect_signal(
+datewid = wibox.widget.textbox()
+datewid:connect_signal(
 "button::press",
 function()
 	awesome.spawn("calnotify",false)
@@ -453,7 +457,7 @@ dateformat = powersave and "%b%d,%H:%M│" or "%b%d,%H:%M:%S│"
 function mydate()
 	return os.date(dateformat)
 end
-vicious.register(datewidget, metawrap(mydate), powersave and 30 or 1)
+vicious.register(datewid, metawrap(mydate), "", powersave and 30 or 1)
 
 -- this spawns a 3 processes every time it is called, so it is disabled until I find a better way to do so
 --capswid = wibox.widget.textbox()
@@ -492,7 +496,7 @@ if not powersave then
 end
 -- }}}
 
---use with echo "echo "aweclientwidget:set_text('foo!')" │ awesome-client
+--use with echo "echo "aweclientwidget:set_text('foo!')" | awesome-client
 aweclientwidget = wibox.widget.textbox()
 --}}}
 
@@ -579,6 +583,7 @@ awful.screen.connect_for_each_screen(function(s)
 
 	-- Create the wibox
 	s.mywibox = awful.wibar({ position = "top", screen = s, font ="Monospace 10"})
+	--s.mywibox = awful.wibar({ position = "bottom", screen = s, font ="Monospace 10"})
 
 
 	-- Add widgets to the wibox
@@ -602,8 +607,8 @@ awful.screen.connect_for_each_screen(function(s)
 	hddwidget,
 	diowidget,
 	netwidget,
-	datewidget,
-	capswid,
+	datewid,
+	--capswid,
 	--foowidget,
 	wibox.widget.systray(),
 	--s.mylayoutbox,
@@ -657,7 +662,8 @@ awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1, nil,
 awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true) end, {description = "decrease the number of columns", group = "layout"}),
 awful.key({ modkey,           }, "space", function () awful.layout.inc( 1) end, {description = "select next", group = "layout"}),
 awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1) end, {description = "select previous", group = "layout"}),
-awful.key({ modkey,           }, ".",     function () awful.spawn("bash -c 'playerctl pause; xscreensaver-command -lock||slock'",false) end, {description = "Locks the screen", group = "system"}),
+awful.key({ modkey,           }, ".",     function () awful.spawn.with_shell("playerctl pause; xscreensaver-command -lock||slock",false) end, {description = "Locks the screen", group = "system"}),
+awful.key({ modkey,           }, "/",     function () awful.spawn.with_shell("playerctl pause; sleep 1; xtrlock-pam -p xscreensaver -b none || slock",false) end, {description = "Locks the screen in a transparent fashion", group = "system"}),
 awful.key({ modkey, "Shift"   }, "c",     function () awesome.spawn("tasklist CPU") end, {description = "Shows the top 5 CPU consuming processes", group = "system"}),
 awful.key({ modkey, "Shift"   }, "m",     function () awesome.spawn("tasklist MEM") end, {description = "Shows the top 5 MEMORY consuming processes", group = "system"}),
 awful.key({ modkey, "Shift"   }, "Print", function () awful.spawn("screenshot",false)  end,{description = "takes a screenshot", group = "screen"}),
@@ -674,7 +680,7 @@ awful.key({ modkey,           }, "F3",    function () awful.spawn("kbd_backlight
 awful.key({ modkey,           }, "F4",    function () awful.spawn("kbd_backlight UP", false) end,{description = "Increase keyboard backlight", group = "system"}),
 awful.key({ modkey,           }, "F5",    function () awful.spawn("xbacklight -5",false) end,{description = "Decrease screen backlight", group = "system"}),
 awful.key({ modkey,           }, "F6",    function () awful.spawn("xbacklight +5",false) end,{description = "Increase screen backlight", group = "system"}),
-awful.key({ modkey            }, "F8",    function () awful.spawn("bash -c 'killall -9 nm-applet; nm-applet'",false) end,{description = "Decrease screen backlight", group = "system"}),
+awful.key({ modkey            }, "F8",    function () awful.spawn.with_shell("killall -9 nm-applet; nm-applet",false) end,{description = "Decrease screen backlight", group = "system"}),
 awful.key({                   }, "XF86MonBrightnessDown", function () awful.spawn("xbacklight -5",false) end,{description = "Decrease screen backlight", group = "system"}),
 awful.key({                   }, "XF86MonBrightnessUp", function () awful.spawn("xbacklight +5",false) end,{description = "Increase screen backlight", group = "system"}),
 awful.key({                   }, "XF86AudioLowerVolume", function () awful.spawn("volumedown",false) end, {description = "Decrease volume", group = "media"}),

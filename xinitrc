@@ -12,6 +12,11 @@ dbus-update-activation-environment --systemd DISPLAY
 eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
 export SSH_AUTH_SOCK
 
-exec awesome 
+slack -u &
+
+# Enable compositing
+compton -CGb
+
+exec awesome
 exec awesome >> ~/.cache/awesome/stdout 2>> ~/.cache/awesome/stderr
 chromium --no-startup-window &

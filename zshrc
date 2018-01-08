@@ -3,7 +3,7 @@
 
 export PATH="$HOME/bin:$PATH" 
 
-#[[ -z $DISPLAY && $XDG_VTNR -eq 1 && -z "$TMUX" ]] && exec startx
+[[ -z $DISPLAY && $XDG_VTNR -eq 1 && -z "$TMUX" ]] && exec startx
 
 source ~/empijei/zshproject/sourcer.sourceme
 source ~/empijei/zshproject/channels.sourceme
@@ -22,7 +22,13 @@ alias alessandro="shuf -n 1 ~/Dropbox/note/lista-nomi-maschili.txt | tr -d '\n' 
 dock-msf(){
 	export PATH="$HOME/external_packages/github.com/rapid7/metasploit-framework/docker/bin:$PATH"
 }
+alias firewalloff="sudo iptables-restore < ~/Reinstall/paranoid-config/lousy-config.iptables"
+wappalyzer(){
+	docker run --rm wappalyzer/cli $@ | jq
+}
+
+compdef _gnu_generic nipty
 
 # added by travis gem
 [ -f /home/rob/.travis/travis.sh ] && source /home/rob/.travis/travis.sh
-[[ $(</proc/$PPID/cmdline) == *qterminal* ]] && export TERM="xterm-256color" || :
+[[ $(</proc/$PPID/cmdline) == *qterminal* ]] && export TERM="xterm-256color" && export CODE_INSPECT=1 || :

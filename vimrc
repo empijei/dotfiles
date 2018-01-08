@@ -73,34 +73,36 @@ nnoremap cp :cp<CR>
 "}}}
 
 " Some useful sets {{{
+set ffs=unix,dos "fileformat for CLRF madness
 set list "shows invisible characters
 set wrap "Wrapping lines
 "set t_te= "do not clear on vim close
 set number "line numbers
 set mouse=a "mouse integration
 set showcmd "Show partial commands
+set history=10000 "command history size
+set undodir=~/.vim/undo/ "tell vim where to look for undo files
+set tabstop=3 "prints the tab character as spaces
 set hlsearch "highlights search result. use :C to clear
 set wildmenu "show commands in statusline
 set modeline "see http://vim.wikia.com/wiki/Modeline_magic
+set undofile "tell vim to use an undo file
+set wildmode=longest,full "Show list of completion in modeline while typing command
+set omnifunc=syntaxcomplete#Complete "http://vim.wikia.com/wiki/Omni_completion
 set smartcase "search insensitive if no uppercase letters appear in the search pattern
 set incsearch "move while searching
-set tabstop=3 "prints the tab character as spaces
-set cursorline "underline current line
-set ignorecase "default for smartcase
-set ffs=unix,dos "fileformat for CLRF madness
 set scrolloff=7 "Always keep at least some lines of visible context around cursor
-set shiftwidth=3 "colum to reindent on reindent command
-set wildmode=longest,full "Show list of completion in modeline while typing command
-set colorcolumn=80 "Mark the 80th character
-set undofile "tell vim to use an undo file
-set undodir=~/.vim/undo/ "tell vim where to look for undo files
-set timeoutlen=500
-"set listchars=tab:\│· "Prints tabs as │···
-"set ttymouse=xterm2 "tmux compatibility
 set listchars=tab:\·\  "Prints tabs as │···
 set fillchars+=vert:\ "removes pipe marker in split
 set clipboard=unnamedplus "System clipboard integration
-set omnifunc=syntaxcomplete#Complete "http://vim.wikia.com/wiki/Omni_completion
+set cursorline "underline current line
+set ignorecase "default for smartcase
+set cryptmethod=blowfish2 "Crypto stronger than default
+set shiftwidth=3 "colum to reindent on reindent command
+set timeoutlen=500
+set colorcolumn=80 "Mark the 80th character
+"set listchars=tab:\│· "Prints tabs as │···
+"set ttymouse=xterm2 "tmux compatibility
 "Set the mark at 80th character to be blue instead of eyekilling red
 "}}}
 
@@ -124,47 +126,55 @@ au InsertLeave * set cursorline "underline current line in other modes
 set laststatus=2
 set ttimeoutlen=50
 " commented out since vim-powerline adoption
-"function! InsertStatuslineColor(mode)
-"	" 0 = Dark Gray
-"	" 1 = Red
-"	" 2 = Lime
-"	" 3 = Yellow
-"	" 4 = Cyan
-"	" 5 = Pink
-"	" 6 = Aquamarine
-"	" 7 = White
-"	if a:mode == 'i'
-"		hi StatusLine term=reverse ctermbg=16 ctermfg=7
-"	elseif a:mode == 'r'
-"		hi StatusLine term=reverse ctermbg=16 ctermfg=1
-"	else
-"		hi StatusLine term=reverse ctermbg=16 ctermfg=7
-"	endif
-"endfunction
-"
-"au InsertEnter * call InsertStatuslineColor(v:insertmode)
-"au InsertChange * call InsertStatuslineColor(v:insertmode)
-"au InsertLeave * hi StatusLine term=reverse ctermbg=16 ctermfg=2
-"hi StatusLine term=reverse ctermbg=16 ctermfg=2
-"set statusline=%<\ %n:%f\ %m%r%y%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
-"" statusline
-"" cf the default statusline: %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
-"" format markers:
-""   %< truncation point
-""   %n buffer number
-""   %f relative path to file
-""   %m modified flag [+] (modified), [-] (unmodifiable) or nothing
-""   %r readonly flag [RO]
-""   %y filetype [ruby]
-""   %= split point for left and right justification
-""   %-35. width specification
-""   %l current line number
-""   %L number of lines in buffer
-""   %c current column number
-""   %V current virtual column number (-n), if different from %c
-""   %P percentage through buffer
-""   %) end of width specification
-""}}}
+function! InsertStatuslineColor(mode)
+	" 0 = Dark Gray
+	" 1 = Red
+	" 2 = Lime
+	" 3 = Yellow
+	" 4 = Cyan
+	" 5 = Pink
+	" 6 = Aquamarine
+	" 7 = White
+	if a:mode == 'i'
+		hi StatusLine term=reverse ctermbg=16 ctermfg=7
+	elseif a:mode == 'r'
+		hi StatusLine term=reverse ctermbg=16 ctermfg=1
+	else
+		hi StatusLine term=reverse ctermbg=16 ctermfg=2
+	endif
+endfunction
+
+au InsertEnter * call InsertStatuslineColor(v:insertmode)
+au InsertChange * call InsertStatuslineColor(v:insertmode)
+au InsertLeave * hi StatusLine term=reverse ctermbg=16 ctermfg=2
+
+if !empty($CODE_INSPECT)
+	"Vanilla, lightweight statusline:
+	set statusline=%<\ %n:%f\ %m%r%y%q%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
+else
+	"More power-consuming statusline:
+	set statusline=%<\ %n:%f\ %m%r%y%q%{fugitive#statusline()}%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
+endif
+" statusline
+" cf the default statusline: %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+" format markers:
+"   %< truncation point
+"   %n buffer number
+"   %f relative path to file
+"   %m modified flag [+] (modified), [-] (unmodifiable) or nothing
+"   %r readonly flag [RO]
+"   %y filetype [ruby]
+"   %q "[Quickfix List]", "[Location List]" or empty.
+"   %{fugitive#statusline()} asks the fugitive plugin to get the current branch
+"   %= split point for left and right justification
+"   %-35. width specification
+"   %l current line number
+"   %L number of lines in buffer
+"   %c current column number
+"   %V current virtual column number (-n), if different from %c
+"   %P percentage through buffer
+"   %) end of width specification
+"}}}
 
 " Quicker window movement
 nnoremap <M-j> <C-w>j
@@ -345,15 +355,15 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim' "Plugin manager
 Plugin 'majutsushi/tagbar' "Ctags panel integration
 Plugin 'KabbAmine/zeavim.vim' "Integration with Zeal
-Plugin 'bogado/file-line' "interpret file:line:column as it should 
+Plugin 'bogado/file-line' "interpret file:line:column as it should
 Plugin 'jceb/vim-editqf' "Increase qf functionalities
 
 "Nerdtree
 Plugin 'scrooloose/nerdtree' "File browser left panel
-Plugin 'ryanoasis/vim-devicons' "Icons for filetypes, this requires a nerdfont
 
-Plugin 'kien/ctrlp.vim'
-Plugin 'powerline/powerline'
+"Plugin 'ctrlpvim/ctrlp.vim'
+"Plugin 'vim-airline/vim-airline'
+"Plugin 'vim-airline/vim-airline-themes'
 
 "Colors {{{
 "Eyecandy
@@ -381,13 +391,17 @@ else
 	Plugin 'tpope/vim-dispatch' "Spawn processes in background
 	Plugin 'Valloric/YouCompleteMe' "Completer for most langauges
 	Plugin 'ervandew/supertab' "Tab completion
-	Plugin 'Xuyuanp/nerdtree-git-plugin' "Addon for nerdtree to support git tags
-	"Plugin 'tiagofumo/vim-nerdtree-syntax-highlight' "colored icons for nerdtree
-	Plugin 'fatih/vim-go' "Golang
 	Plugin 'scrooloose/nerdcommenter' "Commenter for most langauges
+	Plugin 'Xuyuanp/nerdtree-git-plugin' "Addon for nerdtree to support git tags
+	Plugin 'tpope/vim-fugitive' "git integration
+	Plugin 'ryanoasis/vim-devicons' "Icons for filetypes, this requires a nerdfont
+	"Plugin 'tiagofumo/vim-nerdtree-syntax-highlight' "colored icons for nerdtree, disable this for performance reasons
+
 	"Languages I use
-	"Plugin 'davidhalter/jedi-vim' "Python
-	"Plugin 'vim-scripts/Nmap-syntax-highlight' "Nse
+	Plugin 'fatih/vim-go' "Golang
+	Plugin 'davidhalter/jedi-vim' "Python
+	Plugin 'vim-scripts/Nmap-syntax-highlight' "Nse
+	Plugin 'tikhomirov/vim-glsl' "GLSL
 
 	"JS and HTML stuff
 	Plugin 'pangloss/vim-javascript' "JS syntax highlighting and improved indentation
@@ -396,7 +410,7 @@ else
 	Plugin 'othree/javascript-libraries-syntax.vim' "Syntax highlight for the most used JS libraries
 	Plugin 'othree/csscomplete.vim' "Enhanced CSS completion
 
-	"MarkDown
+	"Markdown
 	Plugin 'plasticboy/vim-markdown'
 	Plugin 'shime/vim-livedown'
 	Plugin 'godlygeek/tabular'
@@ -417,23 +431,29 @@ let g:vim_markdown_folding_disabled = 1
 "Powerline
 "this require installing it via pip with
 "pip install powerline-status
-set rtp+=$HOME/.vim/bundle/powerline/powerline/bindings/vim
+"set rtp+=$HOME/.vim/bundle/powerline/powerline/bindings/vim
+
+" Airline
+"let g:airline_powerline_fonts = 0
+""let g:airline_theme='powerlineish'
+"let g:airline#extensions#tagbar#enabled = 0
+"let g:airline_theme='term'
 
 "Gvim is seriously ugly
 if has('gui_running')
 	"set guifont=Fira\ Code\ Medium\ 11
-	set guifont=DejaVuSansMono\ Fira\ Code\ Medium\ 11
+	set guifont=Fira\ Mono\ Medium\ 11
 	"S-more eyecandy
 	colorscheme codedark
 else
 	set t_Co=256
 	set t_ut=
 	colorscheme empijei
-	highlight ExtraWhitespace ctermbg=red
 	"An underline is too invasive, let's just change the contrast
 	hi CursorLine cterm=NONE ctermbg=black
+	highlight ExtraWhitespace ctermbg=red
+	match ExtraWhitespace /\s\+$/
 endif
-match ExtraWhitespace /\s\+$/
 
 "NerdTree
 map <C-n> :NERDTreeToggle<CR>
@@ -602,3 +622,6 @@ augroup golang
 augroup END
 
 "}}}
+"
+"Prepare statusline with the right color
+call InsertStatuslineColor(v:insertmode)
