@@ -73,8 +73,8 @@ xkb_symbols "basic" {
 	key <ESC>  {[ VoidSymbol ]};
 
 	// My Keyboard has PGUP and PGDOWN too close to arrows.
-	key <PGUP>  {[ VoidSymbol, VoidSymbol, VoidSymbol ]};
-	key <PGDN>  {[ VoidSymbol, VoidSymbol, VoidSymbol ]};
+	// key <PGUP>  {[ VoidSymbol, VoidSymbol, VoidSymbol ]};
+	// key <PGDN>  {[ VoidSymbol, VoidSymbol, VoidSymbol ]};
 
         // Make shift+space behave as Return
         // key <SPCE> {[ space, Return ] };

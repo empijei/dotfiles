@@ -1,6 +1,7 @@
 xcalib -d :0 ICM_PROFILES/X1_Carbon_EyeOne.icc &
 bash -c 'xinput disable $(xinput | grep -oP "TM3072-003[^i]+id=\K[0-9]+")' &
 dropbox-cli start &
+blueman-applet &
 nm-applet &
 clipit &
 wmname LG3D &
@@ -13,6 +14,7 @@ eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
 export SSH_AUTH_SOCK
 
 slack -u &
+thunderbird &
 
 # Enable compositing
 compton -CGb

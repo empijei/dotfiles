@@ -32,3 +32,5 @@ compdef _gnu_generic nipty
 # added by travis gem
 [ -f /home/rob/.travis/travis.sh ] && source /home/rob/.travis/travis.sh
 [[ $(</proc/$PPID/cmdline) == *qterminal* ]] && export TERM="xterm-256color" && export CODE_INSPECT=1 || :
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

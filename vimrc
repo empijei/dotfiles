@@ -403,6 +403,11 @@ else
 	Plugin 'vim-scripts/Nmap-syntax-highlight' "Nse
 	Plugin 'tikhomirov/vim-glsl' "GLSL
 
+	"Debugging go
+	Plugin 'Shougo/vimshell.vim'
+	Plugin 'Shougo/vimproc.vim'
+	Plugin 'sebdah/vim-delve'
+
 	"JS and HTML stuff
 	Plugin 'pangloss/vim-javascript' "JS syntax highlighting and improved indentation
 	Plugin 'othree/html5-syntax.vim' "HTML5 syntax improvement
@@ -451,8 +456,11 @@ else
 	colorscheme empijei
 	"An underline is too invasive, let's just change the contrast
 	hi CursorLine cterm=NONE ctermbg=black
-	highlight ExtraWhitespace ctermbg=red
-	match ExtraWhitespace /\s\+$/
+
+	if empty($CODE_INSPECT)
+		highlight ExtraWhitespace ctermbg=red
+		match ExtraWhitespace /\s\+$/
+	endif
 endif
 
 "NerdTree
@@ -622,6 +630,7 @@ augroup golang
 augroup END
 
 "}}}
-"
+
+
 "Prepare statusline with the right color
 call InsertStatuslineColor(v:insertmode)
