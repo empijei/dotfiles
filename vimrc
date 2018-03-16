@@ -476,8 +476,8 @@ let g:SuperTabDefaultCompletionType = "<c-n>"
 "Zeavim
 nmap Z <Plug>Zeavim
 vmap Z <Plug>ZVVisSelection
-nmap gz <Plug>ZVMotion
-nmap gZ <Plug>ZVKeyDocset
+"nmap gz <Plug>ZVMotion
+"nmap gZ <Plug>ZVKeyDocset
 
 let g:zv_file_types = {
 			\	'cpp' : 'cpp',

@@ -666,9 +666,8 @@ awful.key({ modkey,           }, ".",     function () awful.spawn.with_shell("pl
 awful.key({ modkey,           }, "/",     function () awful.spawn.with_shell("playerctl pause; sleep 1; xtrlock-pam -p xscreensaver -b none || slock",false) end, {description = "Locks the screen in a transparent fashion", group = "system"}),
 awful.key({ modkey, "Shift"   }, "c",     function () awesome.spawn("tasklist CPU") end, {description = "Shows the top 5 CPU consuming processes", group = "system"}),
 awful.key({ modkey, "Shift"   }, "m",     function () awesome.spawn("tasklist MEM") end, {description = "Shows the top 5 MEMORY consuming processes", group = "system"}),
-awful.key({ modkey, "Shift"   }, "Print", function () awful.spawn("screenshot",false)  end,{description = "takes a screenshot", group = "screen"}),
 awful.key({                   }, "Print", function () awful.spawn("crop-screenshot",false)  end,{description = "takes a screenshot with selection", group = "screen"}),
-awful.key({ modkey            }, "Print", function () awful.spawn("crop-screenshot SAVE",false)  end,{description = "takes a screenshot with selection", group = "screen"}),
+awful.key({ modkey            }, "Print", function () awful.spawn("crop-screenshot SAVE",false)  end,{description = "takes a screenshot with selection and saves it", group = "screen"}),
 awful.key({ modkey, "Shift"   }, "Print", function () awful.spawn("crop-screenshot OCR",false)  end,{description = "takes a screenshot with selection and uses an OCR to read the text inside the image", group = "screen"}),
 
 -- Top row and media managing
