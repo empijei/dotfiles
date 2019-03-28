@@ -52,7 +52,7 @@ xkb_symbols "basic" {
 	// Symbols
 	key <AB08> {[ comma, less ]};
 	key <AB09> {[ period, greater ]};
-	key <AB10> {[ slash, question, questiondown ]};
+	key <AB10> {[ slash, question, questiondown, U203D ]};
 	key <AC10> {[ semicolon, colon, eacute, Eacute ]};
 	key <AC11> {[ apostrophe, quotedbl, degree ]};
 	key <AD11> {[ bracketleft, braceleft, ampersand ]};
