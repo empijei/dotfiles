@@ -184,6 +184,14 @@ endif
 highlight ExtraWhitespace ctermbg=red
 match ExtraWhitespace /\s\+$/
 
+" Netrw File explorer config in case NERDTree is not available
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 2
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
+map <C-n> :Vexplore<CR>
+
 " External plugins and configurations {{{
 set nocompatible
 filetype off
