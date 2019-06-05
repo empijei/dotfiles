@@ -4,15 +4,11 @@ let mapleader = "\\"
 scriptencoding utf-8
 set encoding=utf-8
 
-"Faster way to access the terminal
-command! T :terminal
-command! TT :tab terminal
-
-"useful misc commands and shortcuts{{{
 "For Hex view
 command! Hex :%!xxd
 command! NoHex :%!xxd -r
-"By default BOOKMARKSs are highlighted
+
+"By default BOOKMARKS are highlighted
 let @/="BOOKMARK"
 command! C let @/="BOOKMARK"
 
@@ -80,6 +76,12 @@ set foldlevelstart=20 "Folds are opened by default
 command! TN :tabnext
 command! TP :tabprev
 
+" Disable line numbers in terminal windows
+au BufWinEnter * if &buftype == 'terminal' | setlocal nonumber | endif
+"Faster way to access the terminal
+command! T :terminal
+command! TT :tab terminal
+
 "statusline {{{
 set laststatus=2
 set ttimeoutlen=50
@@ -101,21 +103,12 @@ function! InsertStatuslineColor(mode)
   endif
 endfunction
 
-" Disable line numbers in terminal windows
-au BufWinEnter * if &buftype == 'terminal' | setlocal nonumber | endif
-
+" Status line
 au InsertEnter * call InsertStatuslineColor(v:insertmode)
 au InsertChange * call InsertStatuslineColor(v:insertmode)
 au InsertLeave * hi StatusLine term=reverse ctermbg=16 ctermfg=2
 hi StatusLine term=reverse ctermbg=16 ctermfg=2
 set statusline=%<\ %n:%f\ %m%r%y%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
-"}}}
-
-"Ctrl-s to save
-"WARNING: you have to put
-"stty -ixon
-"in your bashrc file or this will not work
-inoremap <c-s> <esc>:w<CR>a
 
 " Use ctrl-space to autocomplete
 inoremap <C-Space> <C-x><C-o>
@@ -133,7 +126,7 @@ highlight Search cterm=NONE ctermbg=yellow ctermfg=black
 highlight Visual cterm=NONE ctermbg=yellow ctermfg=black
 highlight SpellBad cterm=NONE ctermfg=black ctermbg=red
 highlight SpellCap cterm=NONE ctermfg=white ctermbg=blue
-"
+
 "GVim default theme is seriously ugly
 if has('gui_running')
   colorscheme torte
@@ -196,6 +189,8 @@ let g:netrw_altv = 1
 let g:netrw_winsize = 25
 map <C-n> :Vexplore<CR>
 
+"=PLUGINS=
+
 " External plugins and configurations {{{
 set nocompatible
 filetype off
@@ -209,7 +204,7 @@ Plugin 'fatih/vim-go'
 Plugin 'leafgarland/typescript-vim'
 Plugin 'empijei/empijei-vim'
 Plugin 'SirVer/ultisnips'
-"Plugin 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 call vundle#end()
 filetype plugin indent on
 
@@ -225,7 +220,6 @@ colorscheme empijei
 " Highlight current line and lenght column in a soft way
 hi CursorLine cterm=NONE ctermbg=black
 highlight ColorColumn ctermbg=black
-
 
 "NerdTree
 map <C-n> :NERDTreeToggle<CR>
@@ -271,8 +265,6 @@ let g:ycm_echo_current_diagnostic = 1
 let g:ycm_warning_symbol = '>'
 let g:ycm_show_diagnostics_ui = 1
 
-"}}} External plugins and configurations
-
 augroup golang
   autocmd!
   set colorcolumn=100
@@ -281,24 +273,28 @@ augroup golang
   autocmd FileType go nmap <Leader>s <Plug>(go-implements)
   autocmd FileType go nmap gr :GoReferrers<CR>
   autocmd FileType go nmap <Leader>r <Plug>(go-rename)
+  autocmd FileType go nmap <Leader>e :GoMetaLinter<CR>
   autocmd FileType go nmap <F5> <Plug>(go-run)
-  "autocmd FileType go nmap <leader>b <Plug>(go-build)
+  autocmd FileType go nmap <leader>t :GoCoverageToggle<CR>
   "autocmd FileType go nmap <leader>t <Plug>(go-test)
-  "autocmd FileType go nmap <leader>t :GoCoverageToggle<CR>
   autocmd FileType go nmap <leader>a :GoAlternate<CR>
-  "autocmd FileType go nmap # <Plug>(go-def)
+  autocmd FileType go nmap gd <Plug>(go-def)
   let g:go_highlight_methods = 1
   let g:go_highlight_structs = 1
   let g:go_highlight_operators = 1
   let g:go_highlight_functions = 1
   let g:go_highlight_interfaces = 1
-  "let g:go_metalinter_enabled = ['gofmt']
+  let g:go_list_type = "quickfix"
+  let g:go_fmt_command = "goimports"
+  "let g:go_metalinter_enabled = ['goimports']
   "let g:go_metalinter_autosave = 1
   "let g:go_metalinter_autosave_enabled = ['vet', 'golint']
   autocmd FileType go nnoremap <leader>d yiwO//<Space><Esc>pa<Space>
   autocmd FileType go iabbrev iin := range
   autocmd FileType go iabbrev !! if err != nil {
 augroup END
+
+"}}} External plugins and configurations
 
 " Fix for https://github.com/vim/vim/issues/2008
 set t_SH=
