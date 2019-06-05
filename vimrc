@@ -44,6 +44,7 @@ set wrap "Wrapping lines
 set path+=** "use globstar for matching
 set t_Co=256 "Extended colors for terminal
 set number "line numbers
+set hidden "Allow a buffer to be replaced even with unsaved changes
 set mouse=a "mouse integration
 set showcmd "Show partial commands
 set history=10000 "command history size
