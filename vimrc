@@ -4,35 +4,6 @@ let mapleader = "\\"
 scriptencoding utf-8
 set encoding=utf-8
 
-"For Hex view
-command! Hex :%!xxd
-command! NoHex :%!xxd -r
-
-"By default BOOKMARKS are highlighted
-let @/="BOOKMARK"
-command! C let @/="BOOKMARK"
-
-command! LineEndings e ++ff=dos<CR>
-
-"delete empty lines
-command! Strip g/^\s*$/d
-"delete trailing spaces
-command! StripEnding :%s/\s\+$//e
-
-"Toggle between vimdiff and vim
-command! Diff windo diffthis | syntax off
-command! NoDiff diffoff! | syntax on
-
-"esc key is a serious overstretch
-inoremap jk <esc>
-
-"Copy filename and fullfilepath to clipboard
-nnoremap c% :let @+=expand("%")<CR>
-
-"Move through vimgrep results less awkwardly
-nnoremap cn :cn<CR>
-nnoremap cp :cp<CR>
-
 " Some useful settings
 set ffs=unix,dos "fileformat for CLRF madness
 set list "shows invisible characters
@@ -70,6 +41,45 @@ set timeoutlen=500
 set colorcolumn=80 "Mark the 80th character
 set foldlevelstart=20 "Folds are opened by default
 
+"For Hex view
+command! Hex :%!xxd
+command! NoHex :%!xxd -r
+
+"By default BOOKMARKS are highlighted
+let @/="BOOKMARK"
+command! C let @/="BOOKMARK"
+
+command! LineEndings e ++ff=dos<CR>
+
+"delete empty lines
+command! Strip g/^\s*$/d
+"delete trailing spaces
+command! StripEnding :%s/\s\+$//e
+
+"esc key is a serious overstretch
+inoremap jk <esc>
+
+"Copy filename and fullfilepath to clipboard
+nnoremap c% :let @+=expand("%")<CR>
+
+"Toggle between vimdiff and vim
+command! Diff windo diffthis | syntax off
+command! NoDiff diffoff! | syntax on
+
+" VimDiff shortcuts
+if &diff
+  " Get from remote
+  nnoremap dr :diffg<Space>RE<CR>
+  " Get from base
+  nnoremap db :diffg<Space>BA<CR>
+  " Get from local
+  nnoremap dl :diffg<Space>LO<CR>
+  " Next diff
+  nnoremap cn ]c
+  " Previous diff
+  nnoremap cp [c
+endif
+
 "Remapping for tab movements
 "nnoremap <Leader>tn :tabnext<CR>
 "nnoremap <Leader>tp :tabprev<CR>
@@ -82,7 +92,7 @@ au BufWinEnter * if &buftype == 'terminal' | setlocal nonumber | endif
 command! T :terminal
 command! TT :tab terminal
 
-"statusline {{{
+" Status line
 set laststatus=2
 set ttimeoutlen=50
 function! InsertStatuslineColor(mode)
@@ -102,8 +112,6 @@ function! InsertStatuslineColor(mode)
     hi StatusLine term=reverse ctermbg=16 ctermfg=7
   endif
 endfunction
-
-" Status line
 au InsertEnter * call InsertStatuslineColor(v:insertmode)
 au InsertChange * call InsertStatuslineColor(v:insertmode)
 au InsertLeave * hi StatusLine term=reverse ctermbg=16 ctermfg=2
@@ -150,7 +158,7 @@ nnoremap <Down> <NOP>
 nnoremap <Left> <NOP>
 nnoremap <Right> <NOP>
 
-" & is close to * so it makes sense to have them behave similarly
+" & is close to * on my keyboard so it makes sense to have them behave similarly
 nnoremap & #
 
 "Avoid stupid typos
@@ -163,20 +171,9 @@ command! Wq :wq
 command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude-dir=.git --exclude tags --exclude \*.cf . -e <args>' | copen | execute 'silent /<args>' | redraw!
 nnoremap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 
-" VimDiff shortcuts
-" https://gist.github.com/karenyyng/f19ff75c60f18b4b8149
-if &diff
-  " Get from remote
-  nnoremap dr :diffg<Space>RE<CR>
-  " Get from base
-  nnoremap db :diffg<Space>BA<CR>
-  " Get from local
-  nnoremap dl :diffg<Space>LO<CR>
-  " Next diff
-  nnoremap cn ]c
-  " Previous diff
-  nnoremap cp [c
-endif
+"Move through vimgrep results less awkwardly
+nnoremap cn :cn<CR>
+nnoremap cp :cp<CR>
 
 highlight ExtraWhitespace ctermbg=red
 match ExtraWhitespace /\s\+$/
