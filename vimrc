@@ -52,7 +52,7 @@ set undodir=~/.vim/undo/ "tell vim where to look for undo files
 set tabstop=2 "prints the tab character as 2 spaces
 set hlsearch "highlights search result. use :C to clear
 set wildmenu "show commands in statusline
-set modeline "see http://vim.wikia.com/wiki/Modeline_magic
+set nomodeline "see http://vim.wikia.com/wiki/Modeline_magic
 set undofile "tell vim to use an undo file
 set wildmode=longest,full "Show list of completion in modeline while typing command
 set omnifunc=syntaxcomplete#Complete "http://vim.wikia.com/wiki/Omni_completion
