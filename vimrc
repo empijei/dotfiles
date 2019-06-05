@@ -100,6 +100,9 @@ function! InsertStatuslineColor(mode)
   endif
 endfunction
 
+" Disable line numbers in terminal windows
+au BufWinEnter * if &buftype == 'terminal' | setlocal nonumber | endif
+
 au InsertEnter * call InsertStatuslineColor(v:insertmode)
 au InsertChange * call InsertStatuslineColor(v:insertmode)
 au InsertLeave * hi StatusLine term=reverse ctermbg=16 ctermfg=2
