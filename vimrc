@@ -4,140 +4,96 @@ let mapleader = "\\"
 scriptencoding utf-8
 set encoding=utf-8
 
-" Some useful settings
-set ffs=unix,dos "fileformat for CLRF madness
-set list "shows invisible characters
-set wrap "Wrapping lines
-set path+=** "use globstar for matching
-set t_Co=256 "Extended colors for terminal
-set number "line numbers
-set hidden "Allow a buffer to be replaced even with unsaved changes
-set mouse=a "mouse integration
-set showcmd "Show partial commands
-set history=10000 "command history size
-set undodir=~/.vim/undo/ "tell vim where to look for undo files
-set tabstop=2 "prints the tab character as 2 spaces
-set hlsearch "highlights search result. use :C to clear
-set wildmenu "show commands in statusline
-set nomodeline "see http://vim.wikia.com/wiki/Modeline_magic
-set undofile "tell vim to use an undo file
-set wildmode=longest,full "Show list of completion in modeline while typing command
-set omnifunc=syntaxcomplete#Complete "http://vim.wikia.com/wiki/Omni_completion
-set ttymouse=xterm2 "Resize splits with mouse while inside screen
-set expandtab "converts tabs to spaces
-set smartcase "search insensitive if no uppercase letters appear in the search pattern
-set incsearch "move while searching
-set directory=~/.vim/directory/ "move swap files out of current dir
-set scrolloff=7 "Always keep at least some lines of visible context around cursor
-set listchars=tab:\·\  "Prints tabs as middle dot
-set fillchars+=vert:\ "removes pipe marker in split
+"Settings {{{
 set clipboard=unnamedplus "System clipboard integration
-set cursorline "underline current line
-set ignorecase "default for smartcase
-set foldmethod=marker "Foldings with {{{ }}} sections
-set cryptmethod=blowfish2 "Crypto stronger than default
-set shiftwidth=2 "column to reindent on reindent command
-set timeoutlen=500
 set colorcolumn=80 "Mark the 80th character
+set cryptmethod=blowfish2 "Crypto stronger than default
+set cursorline "Underline current line
+set directory=~/.vim/directory/ "Move swap files out of current dir
+set expandtab "Converts tabs to spaces
+set ffs=unix,dos "Fileformat for CLRF madness
+set fillchars+=vert:\ "Removes pipe marker in split
 set foldlevelstart=20 "Folds are opened by default
+set foldmethod=marker "Foldings with {{{ }}} sections
+set hidden "Allow a buffer to be replaced even with unsaved changes
+set history=10000 "Command history size
+set hlsearch "Highlights search result. use :C to clear
+set ignorecase "Default for smartcase
+set incsearch "Move while searching
+set laststatus=2 "Always set statusline
+set list "Shows invisible characters
+set listchars=tab:\·\  "Prints tabs as middle dot
+set mouse=a "Mouse integration
+set nomodeline "Disable modeline for security, see http://vim.wikia.com/wiki/Modeline_magic
+set number "Line numbers
+set omnifunc=syntaxcomplete#Complete "Http://vim.wikia.com/wiki/Omni_completion
+set path+=** "Use globstar for matching
+set scrolloff=7 "Always keep at least some lines of visible context around cursor
+set shiftwidth=2 "Column to reindent on reindent command
+set showcmd "Show partial commands
+set smartcase "Search insensitive if no uppercase letters appear in the search pattern
+set t_Co=256 "Extended colors for terminal
+set tabstop=2 "Prints the tab character as 2 spaces
+set timeoutlen=500 "Milliseconds waited for a key code or mapped key sequence to complete
+set ttimeoutlen=50 "Milliseconds waited for a key code to complete
+set ttymouse=urxvt "Makes mouse work correctly in qterminal
+set undodir=~/.vim/undo/ "Tell vim where to look for undo files
+set undofile "Tell vim to use an undo file
+set wildmenu "Show available options in statusline
+set wildmode=longest,full "Show list of completion in statusline, longest first
+set wrap "Wrapping lines
+"Disable line numbers in terminal windows
+autocmd BufWinEnter * if &buftype == 'Terminal' || &buftype == 'terminal' | setlocal nonumber | endif
+"}}}
 
-"For Hex view
-command! Hex :%!xxd
-command! NoHex :%!xxd -r
-
-"By default BOOKMARKS are highlighted
-let @/="BOOKMARK"
-command! C let @/="BOOKMARK"
-
-command! LineEndings e ++ff=dos<CR>
-
-"delete empty lines
-command! Strip g/^\s*$/d
-"delete trailing spaces
-command! StripEnding :%s/\s\+$//e
-
-"esc key is a serious overstretch
+"Mappings {{{
+"Esc key is a serious overstretch
 inoremap jk <esc>
+
+"Remapping for tab movements
+nnoremap <Leader>tn :tabnext<CR>
+nnoremap <Leader>tp :tabprev<CR>
 
 "Copy filename and fullfilepath to clipboard
 nnoremap c% :let @+=expand("%")<CR>
 
-"Toggle between vimdiff and vim
-command! Diff windo diffthis | syntax off
-command! NoDiff diffoff! | syntax on
+"Display buffers menu and prompt for switch
+nnoremap <leader><tab> :buffers<CR>:buffer<Space>
 
-" VimDiff shortcuts
-if &diff
-  " Get from remote
-  nnoremap dr :diffg<Space>RE<CR>
-  " Get from base
-  nnoremap db :diffg<Space>BA<CR>
-  " Get from local
-  nnoremap dl :diffg<Space>LO<CR>
-  " Next diff
-  nnoremap cn ]c
-  " Previous diff
-  nnoremap cp [c
-endif
-
-"Remapping for tab movements
-"nnoremap <Leader>tn :tabnext<CR>
-"nnoremap <Leader>tp :tabprev<CR>
-command! TN :tabnext
-command! TP :tabprev
-
-" Disable line numbers in terminal windows
-au BufWinEnter * if &buftype == 'terminal' | setlocal nonumber | endif
-"Faster way to access the terminal
-command! T :terminal
-command! TT :tab terminal
-
-" Status line
-set laststatus=2
-set ttimeoutlen=50
-function! InsertStatuslineColor(mode)
-  " 0 = Dark Gray
-  " 1 = Red
-  " 2 = Lime
-  " 3 = Yellow
-  " 4 = Cyan
-  " 5 = Pink
-  " 6 = Aquamarine
-  " 7 = White
-  if a:mode == 'i'
-    hi StatusLine term=reverse ctermbg=16 ctermfg=7
-  elseif a:mode == 'r'
-    hi StatusLine term=reverse ctermbg=16 ctermfg=1
-  else
-    hi StatusLine term=reverse ctermbg=16 ctermfg=7
-  endif
-endfunction
-au InsertEnter * call InsertStatuslineColor(v:insertmode)
-au InsertChange * call InsertStatuslineColor(v:insertmode)
-au InsertLeave * hi StatusLine term=reverse ctermbg=16 ctermfg=2
-hi StatusLine term=reverse ctermbg=16 ctermfg=2
-set statusline=%<\ %n:%f\ %m%r%y%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
-
-" Use ctrl-space to autocomplete
+"Use ctrl-space to autocomplete
 inoremap <C-Space> <C-x><C-o>
 inoremap <C-@> <C-Space>
 
-"move lines on Ctrl+Arrows
+"Move and indent lines on Ctrl+j and Ctrl+k
 nnoremap <c-j> :m .+1<CR>==
 nnoremap <c-k> :m .-2<CR>==
 inoremap <c-j> <Esc>:m .+1<CR>==gi
 inoremap <c-k> <Esc>:m .-2<CR>==gi
 
-colorscheme default
-highlight ColorColumn ctermbg=black
-highlight Search cterm=NONE ctermbg=yellow ctermfg=black
-highlight Visual cterm=NONE ctermbg=yellow ctermfg=black
-highlight SpellBad cterm=NONE ctermfg=black ctermbg=red
-highlight SpellCap cterm=NONE ctermfg=white ctermbg=blue
+"Break bad habits
+nnoremap <Up> <NOP>
+nnoremap <Down> <NOP>
+nnoremap <Left> <NOP>
+nnoremap <Right> <NOP>
 
-"GVim default theme is seriously ugly
-if has('gui_running')
-  colorscheme torte
+"& is close to * on my keyboard so it makes sense to have them behave similarly
+nnoremap & #
+"Move through vimgrep results less awkwardly
+nnoremap cn :cn<CR>
+nnoremap cp :cp<CR>
+
+"VimDiff shortcuts
+if &diff
+  "Get from remote
+  nnoremap dr :diffg<Space>RE<CR>
+  "Get from base
+  nnoremap db :diffg<Space>BA<CR>
+  "Get from local
+  nnoremap dl :diffg<Space>LO<CR>
+  "Next diff
+  nnoremap cn ]c
+  "Previous diff
+  nnoremap cp [c
 endif
 
 "Toggle wrapping when needed
@@ -151,15 +107,39 @@ function! ToggleWrap()
     set wrap
   endif
 endfunction
+"}}}
 
-"Break bad habits
-nnoremap <Up> <NOP>
-nnoremap <Down> <NOP>
-nnoremap <Left> <NOP>
-nnoremap <Right> <NOP>
+"Commands {{{
+"Switch to Hex view
+command! Hex :%!xxd
+"Switch from Hex to normal view
+command! NoHex :%!xxd -r
 
-" & is close to * on my keyboard so it makes sense to have them behave similarly
-nnoremap & #
+"By default BOOKMARKs are highlighted and searched for
+let @/="BOOKMARK"
+":C resets search keyword to BOOKMARK
+command! C let @/="BOOKMARK"
+
+"Fix line endings when dos mode
+command! LineEndings e ++ff=dos<CR>
+
+"Delete empty lines
+command! Strip g/^\s*$/d
+"Delete trailing spaces
+command! StripEnding :%s/\s\+$//e
+
+"Switch to diff mode
+command! Diff windo diffthis | syntax off
+"Switch back from diff to normal mode
+command! NoDiff diffoff! | syntax on
+
+"Tabs switch
+command! TN :tabnext
+command! TP :tabprev
+
+"Faster way to access the terminal
+command! T :terminal
+command! TT :tab terminal
 
 "Avoid stupid typos
 command! W :w
@@ -169,26 +149,63 @@ command! Wq :wq
 
 "Call grep from Vim. I know there is :vimgrep, but it is too slow.
 command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude-dir=.git --exclude tags --exclude \*.cf . -e <args>' | copen | execute 'silent /<args>' | redraw!
+"Call Grep with \g
 nnoremap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 
-"Move through vimgrep results less awkwardly
-nnoremap cn :cn<CR>
-nnoremap cp :cp<CR>
+"Browse the web from vim with elinks
+command! -nargs=+ Google :term elinks "https://www.google.com/search?q=<args>"
+command! -nargs=+ Browse :term elinks "https://<args>"
+"}}}
 
+"Status line {{{
+function! InsertStatuslineColor(mode)
+  "0 = Dark Gray
+  "1 = Red
+  "2 = Lime
+  "3 = Yellow
+  "4 = Cyan
+  "5 = Pink
+  "6 = Aquamarine
+  "7 = White
+  if a:mode == 'i'
+    highlight StatusLine term=reverse ctermbg=16 ctermfg=7
+  elseif a:mode == 'r'
+    highlight StatusLine term=reverse ctermbg=16 ctermfg=1
+  else
+    highlight StatusLine term=reverse ctermbg=16 ctermfg=7
+  endif
+endfunction
+autocmd InsertEnter * call InsertStatuslineColor(v:insertmode)
+autocmd InsertChange * call InsertStatuslineColor(v:insertmode)
+autocmd InsertLeave * highlight StatusLine term=reverse ctermbg=16 ctermfg=2
+highlight StatusLine term=reverse ctermbg=16 ctermfg=2
+set statusline=%<\ %n:%f\ %m%r%y%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
+"}}}
+
+" Styles {{{
+colorscheme default
+highlight ColorColumn ctermbg=black
+highlight Search cterm=NONE ctermfg=black ctermbg=green
+highlight Visual cterm=NONE ctermfg=black ctermbg=yellow
 highlight ExtraWhitespace ctermbg=red
 match ExtraWhitespace /\s\+$/
+"GVim default theme is seriously ugly
+if has('gui_running')
+  colorscheme torte
+endif
+"}}}
 
-" Netrw File explorer config in case NERDTree is not available
+"Netrw File explorer config in case NERDTree is not available
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_browse_split = 2
 let g:netrw_altv = 1
 let g:netrw_winsize = 25
-map <C-n> :Vexplore<CR>
+noremap <C-n> :Vexplore<CR>
 
 "=PLUGINS=
 
-" External plugins and configurations {{{
+"External plugins and configurations {{{
 set nocompatible
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -205,21 +222,18 @@ Plugin 'Valloric/YouCompleteMe'
 call vundle#end()
 filetype plugin indent on
 
-" Ultisnips
+"Ultisnips
 let g:UltiSnipsExpandTrigger = "<c-t>"
 let g:UltiSnipsJumpForwardTrigger = "<c-t>"
 let g:UltiSnipsJumpBackwardTrigger = "<c-b>"
 let g:UltiSnipsListSnippets = "<leader>l"
 let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
+let g:UltiSnipsEditSplit="vertical"
 
 colorscheme empijei
 
-" Highlight current line and lenght column in a soft way
-hi CursorLine cterm=NONE ctermbg=black
-highlight ColorColumn ctermbg=black
-
 "NerdTree
-map <C-n> :NERDTreeToggle<CR>
+noremap <C-n> :NERDTreeToggle<CR>
 
 "Tagbar
 command! Ta :TagbarToggle
@@ -251,10 +265,7 @@ let g:tagbar_type_go = {
   \ 'ctagsargs' : '-sort -silent'
 \ }
 
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-
-" youcompleteme
+"YouCompleteMe
 let g:ycm_always_populate_location_list = 1
 let g:ycm_enable_diagnostic_signs = 1
 let g:ycm_enable_diagnostic_highlighting = 1
@@ -262,6 +273,7 @@ let g:ycm_echo_current_diagnostic = 1
 let g:ycm_warning_symbol = '>'
 let g:ycm_show_diagnostics_ui = 1
 
+"Go
 augroup golang
   autocmd!
   set colorcolumn=100
@@ -286,12 +298,12 @@ augroup golang
   "let g:go_metalinter_enabled = ['goimports']
   "let g:go_metalinter_autosave = 1
   "let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+  "\d automatically adds a godoc stub for the current identifier
   autocmd FileType go nnoremap <leader>d yiwO//<Space><Esc>pa<Space>
   autocmd FileType go iabbrev iin := range
   autocmd FileType go iabbrev !! if err != nil {
 augroup END
+"}}}
 
-"}}} External plugins and configurations
-
-" Fix for https://github.com/vim/vim/issues/2008
+"Fix for https://github.com/vim/vim/issues/2008
 set t_SH=
