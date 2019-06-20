@@ -155,7 +155,14 @@ nnoremap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 "Browse the web from vim with elinks
 command! -nargs=+ Google :term elinks "https://www.google.com/search?q=<args>"
 command! -nargs=+ Browse :term elinks "https://<args>"
+<<<<<<< HEAD
 "}}}
+=======
+
+"Move through vimgrep results less awkwardly
+nnoremap cn :cn<CR>
+nnoremap cp :cp<CR>
+>>>>>>> 57b3c9c5a4176f0c8fe8a16c41351bca7d08dc63
 
 "Status line {{{
 function! InsertStatuslineColor(mode)
