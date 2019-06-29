@@ -43,7 +43,7 @@ set wildmenu "Show available options in statusline
 set wildmode=longest,full "Show list of completion in statusline, longest first
 set wrap "Wrapping lines
 "Disable line numbers in terminal windows
-autocmd BufWinEnter * if &buftype == 'Terminal' || &buftype == 'terminal' | setlocal nonumber | endif
+autocmd BufEnter * if &buftype == 'Terminal' || &buftype == 'terminal' | setlocal nonumber | endif
 "}}}
 
 "Mappings {{{
