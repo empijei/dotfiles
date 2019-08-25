@@ -78,9 +78,6 @@ nnoremap <Right> <NOP>
 
 "& is close to * on my keyboard so it makes sense to have them behave similarly
 nnoremap & #
-"Move through vimgrep results less awkwardly
-nnoremap cn :cn<CR>
-nnoremap cp :cp<CR>
 
 "VimDiff shortcuts
 if &diff
@@ -152,17 +149,13 @@ command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude-dir=.git --exclu
 "Call Grep with \g
 nnoremap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 
-"Browse the web from vim with elinks
-command! -nargs=+ Google :term elinks "https://www.google.com/search?q=<args>"
-command! -nargs=+ Browse :term elinks "https://<args>"
-<<<<<<< HEAD
-"}}}
-=======
-
 "Move through vimgrep results less awkwardly
 nnoremap cn :cn<CR>
 nnoremap cp :cp<CR>
->>>>>>> 57b3c9c5a4176f0c8fe8a16c41351bca7d08dc63
+
+"Browse the web from vim with elinks
+command! -nargs=+ Google :term elinks "https://www.google.com/search?q=<args>"
+command! -nargs=+ Browse :term elinks "https://<args>"
 
 "Status line {{{
 function! InsertStatuslineColor(mode)
@@ -222,7 +215,6 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
 Plugin 'majutsushi/tagbar'
 Plugin 'fatih/vim-go'
-Plugin 'leafgarland/typescript-vim'
 Plugin 'empijei/empijei-vim'
 Plugin 'SirVer/ultisnips'
 Plugin 'Valloric/YouCompleteMe'
