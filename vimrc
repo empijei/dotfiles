@@ -199,13 +199,12 @@ if has('gui_running')
 else
   colorscheme desert
 endif
-
-"}}}
 highlight ColorColumn ctermbg=black
 highlight Search cterm=NONE ctermfg=black ctermbg=green
 highlight Visual cterm=NONE ctermfg=black ctermbg=yellow
 highlight ExtraWhitespace ctermbg=red
 match ExtraWhitespace /\s\+$/
+"}}}
 
 "Netrw File explorer config in case NERDTree is not available
 let g:netrw_banner = 0
