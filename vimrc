@@ -216,7 +216,6 @@ noremap <C-n> :Vexplore<CR>
 
 if $VIM_PLUGINS == "1"
   "=PLUGINS=
-  set runtimepath^=~/.vim/bundle/YouCompleteMeGoogle
 
   "External plugins and configurations {{{
   set nocompatible
@@ -225,7 +224,7 @@ if $VIM_PLUGINS == "1"
   call vundle#begin()
   Plugin 'VundleVim/Vundle.vim'
   Plugin 'scrooloose/nerdcommenter'
-  "Plugin 'scrooloose/nerdtree'
+  Plugin 'scrooloose/nerdtree'
   Plugin 'majutsushi/tagbar'
   "Plugin 'myitcv/govim'
   Plugin 'fatih/vim-go'
@@ -237,8 +236,8 @@ if $VIM_PLUGINS == "1"
   filetype plugin indent on
 
   "Ultisnips
-  let g:UltiSnipsExpandTrigger = "<c-t>"
-  let g:UltiSnipsJumpForwardTrigger = "<c-t>"
+  let g:UltiSnipsExpandTrigger = "\\"
+  let g:UltiSnipsJumpForwardTrigger = "\\"
   let g:UltiSnipsJumpBackwardTrigger = "<c-b>"
   let g:UltiSnipsListSnippets = "<leader>l"
   let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
@@ -320,9 +319,10 @@ if $VIM_PLUGINS == "1"
     "\d automatically adds a godoc stub for the current identifier
     autocmd FileType go nnoremap <leader>d yiwO//<Space><Esc>pa<Space>
     autocmd FileType go iabbrev iin := range
+    autocmd FileType go iabbrev try <Esc>:GoIfErr<CR>O
   augroup END
   "}}}
-  endif
+endif
 
-  "Fix for https://github.com/vim/vim/issues/2008
+"Fix for https://github.com/vim/vim/issues/2008
 set t_SH=
