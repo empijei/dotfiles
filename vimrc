@@ -76,14 +76,9 @@ nnoremap <c-k> :m .-2<CR>==
 inoremap <c-j> <Esc>:m .+1<CR>==gi
 inoremap <c-k> <Esc>:m .-2<CR>==gi
 
-"Break bad habits
-nnoremap <Up> <NOP>
-nnoremap <Down> <NOP>
-nnoremap <Left> <NOP>
-nnoremap <Right> <NOP>
-
 "& is close to * on my keyboard so it makes sense to have them behave similarly
 nnoremap & #
+
 "Move through vimgrep results less awkwardly
 nnoremap cn :cn<CR>
 nnoremap cp :cp<CR>
@@ -91,11 +86,11 @@ nnoremap cp :cp<CR>
 "VimDiff shortcuts
 if &diff
   "Get from remote
-  nnoremap dr :diffg<Space>RE<CR>
+  nnoremap dr :diffget<Space>RE<CR>
   "Get from base
-  nnoremap db :diffg<Space>BA<CR>
+  nnoremap db :diffget<Space>BA<CR>
   "Get from local
-  nnoremap dl :diffg<Space>LO<CR>
+  nnoremap dl :diffget<Space>LO<CR>
   "Next diff
   nnoremap cn ]c
   "Previous diff
@@ -214,115 +209,95 @@ let g:netrw_altv = 1
 let g:netrw_winsize = 25
 noremap <C-n> :Vexplore<CR>
 
-if $VIM_PLUGINS == "1"
-  "=PLUGINS=
-
-  "External plugins and configurations {{{
-  set nocompatible
-  filetype off
-  set rtp+=~/.vim/bundle/Vundle.vim
-  call vundle#begin()
-  Plugin 'VundleVim/Vundle.vim'
-  Plugin 'scrooloose/nerdcommenter'
-  Plugin 'scrooloose/nerdtree'
-  Plugin 'majutsushi/tagbar'
-  "Plugin 'myitcv/govim'
-  Plugin 'fatih/vim-go'
-  "Plugin 'leafgarland/typescript-vim'
-  Plugin 'empijei/empijei-vim'
-  Plugin 'SirVer/ultisnips'
-  "Plugin 'Valloric/YouCompleteMe'
-  call vundle#end()
-  filetype plugin indent on
-
-  "Ultisnips
-  let g:UltiSnipsExpandTrigger = "\\"
-  let g:UltiSnipsJumpForwardTrigger = "\\"
-  let g:UltiSnipsJumpBackwardTrigger = "<c-b>"
-  let g:UltiSnipsListSnippets = "<leader>l"
-  let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
-  let g:UltiSnipsEditSplit="vertical"
-
-  colorscheme empijei
-
-  "NerdTree
-  noremap <C-n> :NERDTreeToggle<CR>
-
-  "Tagbar
-  command! Ta :TagbarToggle
-  let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-    \ 'p:package',
-    \ 'i:imports:1',
-    \ 'c:constants',
-    \ 'v:variables',
-    \ 't:types',
-    \ 'n:interfaces',
-    \ 'w:fields',
-    \ 'e:embedded',
-    \ 'm:methods',
-    \ 'r:constructor',
-    \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-    \ 't' : 'ctype',
-    \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-    \ 'ctype' : 't',
-    \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : '~/go/bin/gotags',
-    \ 'ctagsargs' : '-sort -silent'
-  \ }
-
-  "YouCompleteMe
-  let g:ycm_always_populate_location_list = 1
-  let g:ycm_enable_diagnostic_signs = 1
-  let g:ycm_enable_diagnostic_highlighting = 1
-  let g:ycm_echo_current_diagnostic = 1
-  let g:ycm_warning_symbol = '>'
-  let g:ycm_show_diagnostics_ui = 1
-
-  "Go
-  augroup golang
-    autocmd!
-    let g:go_autodetect_gopath=0
-    "Show a list of interfaces which is implemented by the type under your cursor with \s
-    autocmd FileType go nmap <Leader>s <Plug>(go-implements)
-    autocmd FileType go nmap gr :GoReferrers<CR>
-    autocmd FileType go nmap <Leader>r <Plug>(go-rename)
-    autocmd FileType go nmap <Leader>e :GoMetaLinter<CR>
-    autocmd FileType go nmap <Leader>b :GoBuild<CR>
-    autocmd FileType go nmap <F5> <Plug>(go-run)
-    autocmd FileType go nmap <leader>t :GoCoverageToggle<CR>
-    "autocmd FileType go nmap <leader>t <Plug>(go-test)
-    autocmd FileType go nmap <leader>a :GoAlternate<CR>
-    autocmd FileType go nmap gd <Plug>(go-def)
-    let g:go_highlight_methods = 1
-    let g:go_highlight_structs = 1
-    let g:go_highlight_operators = 1
-    let g:go_highlight_functions = 1
-    let g:go_highlight_interfaces = 1
-    let g:go_list_type = "quickfix"
-    let g:go_fmt_command = "goimports"
-    "let g:go_metalinter_enabled = ['goimports']
-    "let g:go_metalinter_autosave = 1
-    "let g:go_metalinter_autosave_enabled = ['vet', 'golint']
-    "see error marks on lines in the numbers column (modern vim v8.1.1564+)
-    "autocmd BufEnter,BufNewFile *.go set signcolumn=number
-    "autocmd BufLeave *.go set signcolumn=
-    autocmd BufEnter,BufNewFile *.go set colorcolumn=100
-    autocmd BufLeave *.go set colorcolumn=80
-    "\d automatically adds a godoc stub for the current identifier
-    autocmd FileType go nnoremap <leader>d yiwO//<Space><Esc>pa<Space>
-    autocmd FileType go iabbrev iin := range
-    autocmd FileType go iabbrev try <Esc>:GoIfErr<CR>O
-  augroup END
-  "}}}
+if $VIM_PLUGINS != "1"
+  "Fix for https://github.com/vim/vim/issues/2008
+  set t_SH=
+  finish
 endif
+
+"====================================PLUGINS====================================
+
+set runtimepath^=~/.vim/bundle/YouCompleteMe
+
+"External plugins and configurations {{{
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree'
+Plugin 'majutsushi/tagbar'
+"Plugin 'myitcv/govim'
+Plugin 'fatih/vim-go'
+"Plugin 'leafgarland/typescript-vim'
+Plugin 'empijei/empijei-vim'
+Plugin 'SirVer/ultisnips'
+"Plugin 'Valloric/YouCompleteMe'
+call vundle#end()
+filetype plugin indent on
+
+"Ultisnips
+let g:UltiSnipsExpandTrigger = "\\"
+let g:UltiSnipsJumpForwardTrigger = "\\"
+let g:UltiSnipsJumpBackwardTrigger = "<c-b>"
+let g:UltiSnipsListSnippets = "<leader>l"
+let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
+let g:UltiSnipsEditSplit="vertical"
+
+colorscheme empijei
+
+"NerdTree
+noremap <C-n> :NERDTreeToggle<CR>
+
+"Tagbar
+command! Ta :TagbarToggle
+
+"YouCompleteMe
+let g:ycm_always_populate_location_list = 1
+let g:ycm_enable_diagnostic_signs = 1
+let g:ycm_enable_diagnostic_highlighting = 1
+let g:ycm_echo_current_diagnostic = 1
+let g:ycm_warning_symbol = '>'
+let g:ycm_show_diagnostics_ui = 1
+
+"Go
+augroup golang
+  autocmd!
+  let g:go_autodetect_gopath=0
+  "Show a list of interfaces which are implemented by the type under your cursor with \s
+  autocmd FileType go nmap <Leader>s <Plug>(go-implements)
+  autocmd FileType go nmap gr :GoReferrers<CR>
+  autocmd FileType go nmap <Leader>r <Plug>(go-rename)
+  autocmd FileType go nmap <Leader>e :GoMetaLinter<CR>
+  autocmd FileType go nmap <Leader>b :GoBuild<CR>
+  autocmd FileType go nmap <Leader>i :GoImpl<Space>
+  autocmd FileType go nmap <F5> <Plug>(go-run)
+  autocmd FileType go nmap <leader>t :GoCoverageToggle<CR>
+  "autocmd FileType go nmap <leader>t <Plug>(go-test)
+  autocmd FileType go nmap <leader>a :GoAlternate<CR>
+  autocmd FileType go nmap gd <Plug>(go-def)
+  let g:go_highlight_methods = 1
+  let g:go_highlight_structs = 1
+  let g:go_highlight_operators = 1
+  let g:go_highlight_functions = 1
+  let g:go_highlight_interfaces = 1
+  let g:go_list_type = "quickfix"
+  let g:go_fmt_command = "goimports"
+  "let g:go_metalinter_enabled = ['goimports']
+  "let g:go_metalinter_autosave = 1
+  "let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+  "see error marks on lines in the numbers column (modern vim v8.1.1564+)
+  "autocmd BufEnter,BufNewFile *.go set signcolumn=number
+  "autocmd BufLeave *.go set signcolumn=
+  autocmd BufEnter,BufNewFile *.go set colorcolumn=100
+  autocmd BufLeave *.go set colorcolumn=80
+  "\d automatically adds a godoc stub for the current identifier
+  autocmd FileType go nnoremap <leader>d yiwO//<Space><Esc>pa<Space>
+  autocmd FileType go iabbrev iin := range
+  autocmd FileType go iabbrev try <Esc>:GoIfErr<CR>O
+augroup END
+"}}}
 
 "Fix for https://github.com/vim/vim/issues/2008
 set t_SH=
