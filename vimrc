@@ -238,8 +238,8 @@ call vundle#end()
 filetype plugin indent on
 
 "Ultisnips
-let g:UltiSnipsExpandTrigger = "\\"
-let g:UltiSnipsJumpForwardTrigger = "\\"
+let g:UltiSnipsExpandTrigger = "<c-l>"
+let g:UltiSnipsJumpForwardTrigger = "<c-l>"
 let g:UltiSnipsJumpBackwardTrigger = "<c-b>"
 let g:UltiSnipsListSnippets = "<leader>l"
 let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
