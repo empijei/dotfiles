@@ -1,7 +1,6 @@
 //Copy this in /usr/share/X11/xkb/symbols/empijei
 //and load with `setxkbmap empijei` or
 //make persistent with `sudo localectl set-x11-keymap empijei [compose:paus]`
-//to invoke a paus key (compose key) on compact keyboards you can use Fn+B
 
 partial default alphanumeric_keys
 xkb_symbols "basic" {
