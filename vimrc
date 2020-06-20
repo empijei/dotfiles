@@ -31,7 +31,6 @@ set nomodeline "Disable modeline for security, see http://vim.wikia.com/wiki/Mod
 set number "Line numbers
 set omnifunc=syntaxcomplete#Complete "Http://vim.wikia.com/wiki/Omni_completion
 set path+=** "Use globstar for matching
-set relativenumber "Line numbers relative to current line
 set scrolloff=7 "Always keep at least some lines of visible context around cursor
 set shiftwidth=2 "Column to reindent on reindent command
 set showcmd "Show partial commands
