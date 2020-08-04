@@ -70,6 +70,8 @@ xkb_symbols "basic" {
 	key <LFSH> {[ Shift_L, Caps_Lock ]};
 	key <RTSH> {[ Shift_R, Caps_Lock ]};
 
+	replace key <LALT> {[ Return ]};
+
 	// Disable Caps_Lock and give it Escape function
 	key <CAPS> {[ Escape ]};
 	// Disable Escape to stop stretching. Painful but necessary.
