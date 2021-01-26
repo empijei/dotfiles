@@ -11,7 +11,7 @@ set balloondelay=250 "Delay to show the suggestion balloon
 set clipboard=unnamedplus "System clipboard integration
 set colorcolumn=80 "Mark the 80th character
 set cryptmethod=blowfish2 "Crypto stronger than default
-set cursorline "Underline current line
+"set cursorline "Underline current line
 set directory=~/.vim/directory/ "Move swap files out of current dir
 set expandtab "Converts tabs to spaces
 set ffs=unix,dos "Fileformat for CLRF madness
@@ -27,21 +27,21 @@ set laststatus=2 "Always set statusline
 set list "Shows invisible characters
 set listchars=tab:\·\  "Prints tabs as middle dot
 set mouse=a "Mouse integration
-set nomodeline "Disable modeline for security, see http://vim.wikia.com/wiki/Modeline_magic
-set number "Line numbers
+set number "Show line numbers
 set omnifunc=syntaxcomplete#Complete "Http://vim.wikia.com/wiki/Omni_completion
 set path+=** "Use globstar for matching
 set scrolloff=7 "Always keep at least some lines of visible context around cursor
 set shiftwidth=2 "Column to reindent on reindent command
 set showcmd "Show partial commands
-"set signcolumn=number "see error marks on lines in the numbers column (modern vim v8.1.1564+)
+set signcolumn=number "see error marks on lines in the numbers column (modern vim v8.1.1564+)
 set smartcase "Search insensitive if no uppercase letters appear in the search pattern
 set smartindent "Smart auto indenting
 set t_Co=256 "Extended colors for terminal
 set tabstop=2 "Prints the tab character as 2 spaces
 set timeoutlen=500 "Milliseconds waited for a key code or mapped key sequence to complete
 set ttimeoutlen=50 "Milliseconds waited for a key code to complete
-set ttymouse=urxvt "Makes mouse work correctly in qterminal
+set ttymouse=sgr "Makes mouse work correctly in terminator
+"set ttymouse=urxvt "Makes mouse work correctly in qterminal
 set undodir=~/.vim/undo/ "Tell vim where to look for undo files
 set undofile "Tell vim to use an undo file
 set updatetime=500 "Responsive updates while coding
@@ -49,16 +49,18 @@ set wildmenu "Show available options in statusline
 set wildmode=longest,full "Show list of completion in statusline, longest first
 set wrap "Wrapping lines
 "Disable line numbers in terminal windows
-autocmd BufEnter * if &buftype == 'Terminal' || &buftype == 'terminal' | setlocal nonumber | endif
+autocmd TerminalOpen * if &buftype == 'terminal' | setlocal nonumber | setlocal norelativenumber | endif
 "}}}
 
 "Mappings {{{
 "Esc key is a serious overstretch
 inoremap jk <esc>
 
-"Remapping for tab movements
-nnoremap <Leader>tn :tabnext<CR>
-nnoremap <Leader>tp :tabprev<CR>
+"Remapping for window movements
+"nnoremap j <C-w>j
+"nnoremap l <C-w>l
+"nnoremap h <C-w>h
+"nnoremap k <C-w>k
 
 "Copy filename and fullfilepath to clipboard
 nnoremap c% :let @+=expand("%")<CR>
@@ -192,11 +194,11 @@ set statusline=%<\ %n:%f\ %m%r%y%=%35.(line:\ %l\ of\ %L,\ col:\ %c%V\ [%P]%)
 if has('gui_running')
   colorscheme zellner
 else
-  colorscheme desert
+  colorscheme default
 endif
-highlight ColorColumn ctermbg=black
-highlight Search cterm=NONE ctermfg=black ctermbg=green
-highlight Visual cterm=NONE ctermfg=black ctermbg=yellow
+"highlight ColorColumn ctermbg=black
+"highlight Search cterm=NONE ctermfg=black ctermbg=green
+"highlight Visual cterm=NONE ctermfg=black ctermbg=yellow
 highlight ExtraWhitespace ctermbg=red
 match ExtraWhitespace /\s\+$/
 "}}}
@@ -227,25 +229,49 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
-Plugin 'majutsushi/tagbar'
-"Plugin 'myitcv/govim'
-Plugin 'fatih/vim-go'
-"Plugin 'leafgarland/typescript-vim'
+"Plugin 'majutsushi/tagbar'
 Plugin 'empijei/empijei-vim'
 Plugin 'SirVer/ultisnips'
+Plugin 'govim/govim'
+
 "Plugin 'Valloric/YouCompleteMe'
+
+if has('nvim')
+  Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plugin 'Shougo/deoplete.nvim'
+  Plugin 'roxma/nvim-yarp'
+  Plugin 'roxma/vim-hug-neovim-rpc'
+endif
+let g:deoplete#enable_at_startup = 1
+
 call vundle#end()
 filetype plugin indent on
+
+" deoplete
+let g:deoplete#enable_at_startup = 1
+call deoplete#custom#option('omni_patterns', {
+\ 'go': '[^. *\t]\.\w*',
+\})
+" <TAB>: completion.
+function! s:check_back_space() abort 
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction"}}}
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ deoplete#manual_complete()
 
 "Ultisnips
 let g:UltiSnipsExpandTrigger = "<c-l>"
 let g:UltiSnipsJumpForwardTrigger = "<c-l>"
-let g:UltiSnipsJumpBackwardTrigger = "<c-b>"
+"let g:UltiSnipsJumpBackwardTrigger = "<c-h>"
 let g:UltiSnipsListSnippets = "<leader>l"
 let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
 let g:UltiSnipsEditSplit="vertical"
 
-colorscheme empijei
+colorscheme default
 
 "NerdTree
 noremap <C-n> :NERDTreeToggle<CR>
@@ -264,40 +290,32 @@ let g:ycm_show_diagnostics_ui = 1
 "Go
 augroup golang
   autocmd!
-  let g:go_autodetect_gopath=0
-  "Show a list of interfaces which are implemented by the type under your cursor with \s
-  autocmd FileType go nmap <Leader>s <Plug>(go-implements)
-  autocmd FileType go nmap gr :GoReferrers<CR>
-  autocmd FileType go nmap <Leader>r <Plug>(go-rename)
-  autocmd FileType go nmap <Leader>e :GoMetaLinter<CR>
-  autocmd FileType go nmap <Leader>b :GoBuild<CR>
-  autocmd FileType go nmap <Leader>i :GoImpl<Space>
-  autocmd FileType go nmap <F5> <Plug>(go-run)
-  autocmd FileType go nmap <leader>t :GoCoverageToggle<CR>
-  "autocmd FileType go nmap <leader>t <Plug>(go-test)
-  autocmd FileType go nmap <leader>a :GoAlternate<CR>
-  autocmd FileType go nmap gd <Plug>(go-def)
-  let g:go_highlight_methods = 1
-  let g:go_highlight_structs = 1
-  let g:go_highlight_operators = 1
-  let g:go_highlight_functions = 1
-  let g:go_highlight_interfaces = 1
-  let g:go_list_type = "quickfix"
-  let g:go_fmt_command = "goimports"
-  "let g:go_metalinter_enabled = ['goimports']
-  "let g:go_metalinter_autosave = 1
-  "let g:go_metalinter_autosave_enabled = ['vet', 'golint']
-  "see error marks on lines in the numbers column (modern vim v8.1.1564+)
-  "autocmd BufEnter,BufNewFile *.go set signcolumn=number
-  "autocmd BufLeave *.go set signcolumn=
-  autocmd BufEnter,BufNewFile *.go set colorcolumn=100
-  autocmd BufLeave *.go set colorcolumn=80
-  "\d automatically adds a godoc stub for the current identifier
   autocmd FileType go nnoremap <leader>d yiwO//<Space><Esc>pa<Space>
-  autocmd FileType go iabbrev iin := range
-  autocmd FileType go iabbrev try <Esc>:GoIfErr<CR>O
+
+  " GoVim
+  if has("patch-8.1.1904")
+    autocmd FileType go set completeopt+=popup
+    autocmd FileType go set completepopup=align:menu,border:off,highlight:Pmenu
+  endif
+  autocmd FileType go nmap <Leader>E :cw<CR>
+  call govim#config#Set("ExperimentalMouseTriggeredHoverPopupOptions", {
+      \ "mousemoved": "any",
+      \ "pos": "botright",
+      \ "line": +1,
+      \ "col": 0,
+      \ "moved": "any",
+      \ "wrap": v:false,
+      \ "close": "click",
+      \ "padding": [0, 1, 0, 1],
+      \})
+  command! Cnext try | cbelow | catch | cabove 99999 | catch | endtry
+  nnoremap <leader>e :Cnext<CR>
+  command! Ren GOVIMRename
+  autocmd FileType go nmap gr <Esc>:GOVIMReferences<CR>
 augroup END
 "}}}
+
+set nomodeline "Disable modeline for security, see http://vim.wikia.com/wiki/Modeline_magic
 
 "Fix for https://github.com/vim/vim/issues/2008
 set t_SH=
